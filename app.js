@@ -1,18 +1,24 @@
 var express = require('express');
-var server = express() ;
+var app = express();
 
-server.
-	// Page d'accueil
-	get('/', function(req, res) {
-		res.setHeader('Content-Type', "text/html; charset=utf-8"); 
-		res.end('Hello World !'); 
-	})
+app
+    .use(express.static(__dirname + '/public'))
 
-	// Utilisation d'un resource dans le projet:
-	// Exemple : j'ai besoin d'inclure un fichier CSS => .use(req, res, express.static('css/mon_fichier.css'));
-	.use(function(req, res, next){
-		res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-		res.status(404).send('Vous êtes sur une page inconnue.');
-	}); 
+    .use(express.static(__dirname + '/public'))
 
-server.listen(8080);
+    /*
+     // session support
+     app.use(session({
+     resave: false, // don't save session if unmodified
+     saveUninitialized: false, // don't create session until something stored
+     secret: 'some secret here'
+     }));
+     */
+
+    .use(require('./middlewares/index'))
+
+    .use(require('./controllers/index'))
+
+    .listen(3000, function() {
+        console.log('Listening on port 3000...')
+    })
