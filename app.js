@@ -5,7 +5,7 @@ var constants = require('./utils/constants');
 app.engine('html', require('ejs').renderFile);
 
 app
-    .use(express.static(__dirname + '/public'))
+    .use(express.static(__dirname + '/public'));
 
     /*
      // session support
@@ -16,11 +16,10 @@ app
      }));
      */
 
-    //.use(require('./middlewares/index'))
+    // Load controllers
+    require('./controllers/default')(app);
 
-    .use(require('./controllers/default'))
-    .use(require('./controllers/default2'))
-
+    // Listening
     var server = app.listen(constants.BASE_PORT, function() {
         console.log('Listening on port 3000...');
     });

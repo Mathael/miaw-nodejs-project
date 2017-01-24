@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://Yacancoatl@bitbucket.org/Yacancoatl/node-project.git"
   },
-  "author": "Leboc Philippe",
+  "author": "Leboc Philippe, Kevin Lextrait, Charlotte Rossi",
   "license": "ISC",
   "homepage": "https://bitbucket.org/Yacancoatl/node-project#readme",
   "dependencies": {

@@ -1,13 +1,12 @@
-var express = require('express'), router = express.Router();
+module.exports = function (app) {
 
-router.get('/', function (req, res) {
-    res.render('../views/default/index.html', {page: 1});
-});
+    app.get('/', function (req, res) {
+        res.render('default/index.ejs', {page: 1});
+    });
 
-router.get('/test', function (req, res) {
-    res.render('../views/default/index.html', {page: 2});
-});
+    app.get('/test', function (req, res) {
+        res.render('default/index.ejs', {page: 2});
+    });
 
-console.log('controller 1 loaded');
-
-module.exports = router;
+    console.log('controller 1 loaded');
+};
