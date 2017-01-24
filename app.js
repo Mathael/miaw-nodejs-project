@@ -21,6 +21,9 @@ app
     .use(require('./controllers/default'))
     .use(require('./controllers/default2'))
 
-    .listen(constants.BASE_PORT, function() {
+    var server = app.listen(constants.BASE_PORT, function() {
         console.log('Listening on port 3000...');
     });
+
+    var io = require('socket.io').listen(server);
+
