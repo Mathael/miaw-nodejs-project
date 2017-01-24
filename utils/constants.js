@@ -1,3 +1,4 @@
 module.exports = {
-    BASE_PORT : "3000"
+    BASE_PORT : 3000
+
 };
