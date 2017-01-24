@@ -1,13 +1,12 @@
 var express = require('express'), router = express.Router();
 
-router.get('/', function (req, res) {
+router.get('/tata', function (req, res) {
     res.render('../views/default/index.html', {page: 1});
 });
 
-router.get('/test', function (req, res) {
+router.get('/toto', function (req, res) {
     res.render('../views/default/index.html', {page: 2});
 });
 
-console.log('controller 1 loaded');
-
+console.log('controller 2 loaded');
 module.exports = router;
