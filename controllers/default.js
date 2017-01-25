@@ -1,3 +1,5 @@
+var database = require('../utils/database');
+
 module.exports = function (app) {
 
     app.get('/', function (req, res) {
@@ -5,7 +7,15 @@ module.exports = function (app) {
     });
 
     app.get('/test', function (req, res) {
-        res.render('default/index.ejs', {page: 2});
+        var a = null;
+        database.executeQuery('select * from article', function(rows, fields) {
+            console.log('rows', rows.length);
+            console.log('fields', fields.length);
+            a = rows.length;
+        });
+
+        console.log(a);
+        res.render('default/index.ejs', {page: a});
     });
 
     console.log('controller 1 loaded');

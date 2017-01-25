@@ -20,9 +20,8 @@ app
     require('./controllers/default')(app);
 
     // Listening
-    var server = app.listen(constants.BASE_PORT, function() {
+    var server = app.listen(constants.SERVER.PORT, function() {
         console.log('Listening on port 3000...');
     });
 
     var io = require('socket.io').listen(server);
-
