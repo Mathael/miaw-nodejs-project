@@ -1,6 +1,6 @@
 var database = require('../utils/database');
 
-module.exports = function (app) {
+module.exports = function (app,io) {
 
     app.get('/', function (req, res) {
         res.render('default/index.ejs', {page: 1});
@@ -16,6 +16,18 @@ module.exports = function (app) {
 
         console.log(a);
         res.render('default/index.ejs', {page: a});
+    });
+
+
+    io.sockets.on('connection',function (request) {
+
+
+        console.log('Un utilisateur s\'est connecté avec la session  #' + request.id);
+        request.emit('info', {'text' : 'Vous êtes connecté !', 'sessionId' : request.id});
+
+
+
+
     });
 
     console.log('controller 1 loaded');

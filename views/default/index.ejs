@@ -7,4 +7,14 @@
 <body>
     <p>Page numéro : <%= page %></p>
 </body>
+<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+<script>
+
+console.log("connexion aux sockets");
+var socket = io.connect('http://localhost:3000');
+socket.on('info', function(message) {
+console.log('Le serveur a un message pour vous :\n' + message.text + '\n' + message.sessionId);
+});
+
+</script>
 </html>

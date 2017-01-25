@@ -1,4 +1,5 @@
 var express = require('express');
+var sockets = require('socket.io');
 var app = express();
 var constants = require('./utils/constants');
 
@@ -16,12 +17,20 @@ app
      }));
      */
 
-    // Load controllers
-    require('./controllers/default')(app);
+
 
     // Listening
     var server = app.listen(constants.SERVER.PORT, function() {
         console.log('Listening on port 3000...');
     });
 
-    var io = require('socket.io').listen(server);
+    var io = sockets.listen(server);
+
+    io.sockets.on('connection',function (socket) {
+        console.log("user co");
+
+    });
+
+
+    // Load controllers
+    require('./controllers/default')(app,io);
