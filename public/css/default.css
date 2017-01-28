@@ -1,0 +1,27 @@
+header {
+    width: 100%;
+    border: 1px solid black;
+    clear: both;
+    display: block;
+}
+
+header>ul li a { cursor: pointer; }
+
+nav {
+    width: 100%;
+    border: 1px solid black;
+}
+
+body > section {
+    border: 1px solid black;
+    margin: 5px 0;
+}
+
+footer {
+    width: 100%;
+    border: 1px solid black;
+    clear: both;
+    display: block;
+}
+
+footer p { text-align: center; }
