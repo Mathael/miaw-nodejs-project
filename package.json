@@ -14,6 +14,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/Yacancoatl/node-project#readme",
   "dependencies": {
+    "body-parser": "^1.16.0",
     "ejs": "^2.5.5",
     "express": "^4.14.0",
     "helmet": "^3.4.0",

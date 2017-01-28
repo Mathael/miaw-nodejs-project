@@ -1,22 +1,42 @@
+// Main application
 var express = require('express');
 var sockets = require('socket.io');
+var bodyParser = require('body-parser');
 var app = express();
 var constants = require('./utils/constants');
 
+// Use EJS template engine
 app.engine('html', require('ejs').renderFile);
 
-app.use(express.static(__dirname + '/public'));
+// Deliver all static files under /public
+app.use('/static', express.static(__dirname + '/public'));
 
-// Listening
+// to support JSON-encoded bodies
+app.use( bodyParser.json() );
+
+// to support URL-encoded bodies
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+// HTTP Listening
 var server = app.listen(constants.SERVER.PORT, function() {
-    console.log('Listening on port *:'+constants.SERVER.PORT+'...');
+    console.log('Listening on port *:'+constants.SERVER.PORT);
 });
 
+// All global variables must be put here
+var global = {clients : []};
+
+// Socket listening
 var io = sockets.listen(server);
 
-io.on('connection',function (socket) {
-    console.log("Socket reçu : " + socket.id);
-});
+// Loading events catchers
+require('./events/connection-state')(io,global);
+require('./events/room')(io);
 
-// Load controllers
+// Loading middlewares
+app.use(require('./middlewares/index'));
+
+// Loading controllers
 require('./controllers/default')(app,io);
+require('./controllers/room')(app,io,global);
