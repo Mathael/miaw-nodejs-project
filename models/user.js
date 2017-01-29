@@ -2,6 +2,7 @@
 var method = User.prototype;
 
 function User(username, password, roles) {
+    this._id = guid();
     this._username = username;
     this._password = password;
     this._roles = roles;
