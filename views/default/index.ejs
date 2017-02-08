@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
+        <link rel="stylesheet" href="/public/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/public/css/default.css" />
     </head>
     <body>
@@ -11,6 +12,7 @@
                 <li><a onclick="application.showRooms();">Salons</a></li>
                 <li><a onclick="handleRequest('login');">Espace enseignant</a></li>
                 <li><a onclick="handleRequest('about');">A propos</a></li>
+                <li id="client-count"><i class="fa fa-user-circle-o"></i><span id="client-count-value"></span></li>
             </ul>
         </header>
         <section id="content">

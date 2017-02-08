@@ -4,22 +4,6 @@ var pageManager = {
 
         clearBody();
 
-        if(data == undefined || data.length == 0)
-        {
-            $('<p>').text("Il n'y a aucun salon pour le moment").appendTo('#content');
-            var createButton = $('<button>');
-            var newRoomInputName = $('<input>');
-
-            createButton.text("Créer un nouveau salon");
-            createButton.on('click', function () {
-                application.createRooms(newRoomInputName.val());
-            });
-
-            newRoomInputName.appendTo('#content');
-            createButton.appendTo('#content');
-            return;
-        }
-
         $.each(data, function (k,v) {
             var container = $('<article>');
             var room_name = $('<p>');
@@ -43,5 +27,20 @@ var pageManager = {
             container.append(commander_name);
             container.appendTo('#content');
         });
+
+        if(data == undefined || data.length == 0) {
+            $('<p>').text("Il n'y a aucun salon pour le moment").appendTo('#content');
+        }
+
+        var createButton = $('<button>');
+        var newRoomInputName = $('<input>');
+
+        createButton.text("Créer un nouveau salon");
+        createButton.on('click', function () {
+            application.createRooms(newRoomInputName.val());
+        });
+
+        newRoomInputName.appendTo('#content');
+        createButton.appendTo('#content');
     }
 };

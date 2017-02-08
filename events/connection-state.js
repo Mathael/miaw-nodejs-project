@@ -8,15 +8,18 @@ module.exports = function (io,global) {
 
         var roomController = require('../controllers/room');
 
+        // Send all availables events to front application
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, {
             id: socket.id,
             message: 'Connection successful',
             payload: require('../utils/events')
         });
 
+        // Handle client disconnect and to keep client list updated and notify everyone of clients count
         socket.on('disconnect', function (data) {
             global.clients.splice(global.clients.indexOf(data), 1);
-            console.log('[IO] Connected clients : ' + global.clients.length);
+            console.log('[IO] Client disconnected.');
+            io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, global.clients.length);
         });
 
         //////////////////////////////////////////////////

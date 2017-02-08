@@ -5,6 +5,7 @@ module.exports = {
     create: function (socket, name) {
         console.log('[ROOM Controller] create rooms.');
         roomService.create(name, null);
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);
     },
 
     findAll: function (socket) {

@@ -14,7 +14,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
-        console.log('new user count : ' + data);
+        // TODO: move DOM logic
+        $('#client-count-value').text(data);
     });
 
 });
