@@ -6,6 +6,9 @@ module.exports = {
         }
     },
     TO_CLIENT : {
+        GENERAL: {
+            NEW_USER_COUNT : 'GENERAL_NEW_USER_COUNT'
+        },
         ROOM : {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
             JOIN : 'EVENT_ROOM_JOIN',

@@ -2,9 +2,9 @@ var APP_EVENTS = require('../utils/events');
 module.exports = function (io,global) {
 
     io.on('connection', function (socket) {
+        global.clients.push(socket);
         console.log("[IO] Socket reçu : " + socket.id);
         console.log('[IO] Connected clients : ' + global.clients.length);
-        global.clients.push(socket);
 
         var roomController = require('../controllers/room');
 
@@ -64,9 +64,13 @@ module.exports = function (io,global) {
                 room: room
             });
 
-            // Notify to all members that was already in this room (except the current client)
+            // TODO: remove me : Notify to all members that was already in this room (except the current client)
             client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
         });
+
+        //////////////////////////////////////////////////
+        ///                 USER EVENTS                ///
+        //////////////////////////////////////////////////
 
         //////////////////////////////////////////////////
         ///               QUESTION EVENTS              ///
@@ -75,6 +79,13 @@ module.exports = function (io,global) {
         //////////////////////////////////////////////////
         ///                ANSWER EVENTS               ///
         //////////////////////////////////////////////////
+
+        //////////////////////////////////////////////////
+        ///                GLOBAL EVENTS               ///
+        //////////////////////////////////////////////////
+
+        // Global broadcast on new client connect
+        io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, global.clients.length);
 
     });
 };

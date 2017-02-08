@@ -13,6 +13,10 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayRooms(data);
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
+        console.log('new user count : ' + data);
+    });
+
 });
 
 socket.on('disconnect', function(){

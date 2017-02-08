@@ -12,7 +12,7 @@ var pageManager = {
 
             createButton.text("Créer un nouveau salon");
             createButton.on('click', function () {
-                createRoom(newRoomInputName.val());
+                application.createRooms(newRoomInputName.val());
             });
 
             newRoomInputName.appendTo('#content');
@@ -37,13 +37,11 @@ var pageManager = {
             room_name.append(size);
 
             container.on('click', function(){
-                joinRoom(v._name);
+                //application(v._name);
             });
             container.append(room_name);
             container.append(commander_name);
             container.appendTo('#content');
         });
-
     }
-
 };
