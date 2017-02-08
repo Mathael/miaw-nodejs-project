@@ -7,9 +7,18 @@ module.exports = {
     create : function (name, commander) {
         var room = new Room(name, commander);
 
-        // TODO: check if commander is already a commander of another room
+        // If current commander is the commander of another room, it will not able to create another one
+        var one = this.rooms.find(function (room) {
+            return room._commander && room._commander._id == commander._id;
+        });
+
+        if(one != null) {
+            return false;
+        }
+
         this.rooms.push(room);
         console.log('[RoomService] new Room created with name :', name);
+        return true;
     },
 
     remove : function (room) {

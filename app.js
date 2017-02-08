@@ -9,7 +9,7 @@ var constants = require('./utils/constants');
 app.engine('html', require('ejs').renderFile);
 
 // Deliver all static files under /public
-app.use('/static', express.static(__dirname + '/public'));
+app.use('/public', express.static(__dirname + '/public'));
 
 // to support JSON-encoded bodies
 app.use( bodyParser.json() );
@@ -32,11 +32,10 @@ var io = sockets.listen(server);
 
 // Loading events catchers
 require('./events/connection-state')(io,global);
-require('./events/room')(io);
+//require('./events/room')(io);
 
 // Loading middlewares
 app.use(require('./middlewares/index'));
 
 // Loading controllers
 require('./controllers/default')(app,io);
-require('./controllers/room')(app,io,global);

@@ -2,6 +2,7 @@
 var method = Room.prototype;
 
 function Room(name, commander) {
+    this._nsp = '/'+name;
     this._name = name;
     this._commander = commander;
     this._members = [];

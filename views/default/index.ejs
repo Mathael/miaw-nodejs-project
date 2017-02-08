@@ -3,12 +3,12 @@
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
-        <link rel="stylesheet" href="/static/css/default.css" />
+        <link rel="stylesheet" href="/public/css/default.css" />
     </head>
     <body>
         <header>
             <ul>
-                <li><a onclick="handleRequest('rooms');">Salons</a></li>
+                <li><a onclick="application.showRooms();">Salons</a></li>
                 <li><a onclick="handleRequest('login');">Espace enseignant</a></li>
                 <li><a onclick="handleRequest('about');">A propos</a></li>
             </ul>
@@ -20,8 +20,12 @@
             <p>Réalisé par Philippe LEBOC, Kévin LEXTRAIT et Charlotte ROSSI dans le cadre d'un projet de la Licence Pro : Application Web de l'IUT 2 (UGA)</p>
         </footer>
     </body>
-    <script src="/static/js/jquery-3.1.1.min.js"></script>
-    <script src="/static/js/socket.io.min.js"></script>
-    <script src="/static/js/socket-handler.js"></script>
-    <script src="/static/js/router.js"></script>
+    <script src="/public/js/jquery-3.1.1.min.js"></script>
+    <script src="/public/js/socket.io.js"></script>
+    <script src="/public/js/page-manager.js"></script>
+    <script src="/public/js/init.js"></script>
+    <script src="/public/js/socket-listeners.js"></script>
+    <script src="/public/js/socket-emitters.js"></script>
+    <script src="/public/js/router.js"></script>
+    <script src="/public/js/application.js"></script>
 </html>

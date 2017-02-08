@@ -2,7 +2,11 @@ function handleRequest(choice) {
     console.log('[Client] handle request for :', choice);
     switch(choice) {
         case 'rooms': getAllRooms(); break;
-        case 'login': index(); break;
+        case 'login':
+        {
+            //socket.emit('check', 'jaque');
+            break;
+        }
         case 'about': index(); break;
         default: index();
     }
@@ -15,22 +19,26 @@ function index() {
     title.appendTo('#content');
 }
 
-function getAllRooms() {
+function joinRoom(name) {
     $.ajax({
-        url : '/room',
-        type : 'GET',
+        url : '/room/join',
+        type : 'POST',
+        data: {
+            socketId: sessionStorage.getItem('socketId'),
+            room : name
+        },
         success : function(data, status){
-            showRoomPage(data);
+            console.log(data);
         },
         error : function(result, status, error){
-            console.log(status, error);
+            console.log('Error', error);
         }
     });
 }
 
-function joinRoom(name) {
+function createRoom(name) {
     $.ajax({
-        url : '/room/join',
+        url : '/room/create',
         type : 'POST',
         data: {
             socketId: sessionStorage.getItem('socketId'),
@@ -54,28 +62,6 @@ function clearBody() {
 //////////////////////////////////////
 
 function showRoomPage(data) {
-    clearBody();
-    $.each(data, function (k,v) {
-        var container = $('<article>');
-        var room_name = $('<p>');
-        var commander_name = $('<p>');
-        var size = $('<span>');
 
-        room_name.text(v._name);
 
-        if(v._commander)
-            commander_name.text(v._commander._username);
-        else
-            (commander_name.text('Salon créé par : Inconnu'));
-
-        size.text(' ('+(v._members.length + (v._commander ? 1 : 0)) +')');
-        room_name.append(size);
-
-        container.on('click', function(){
-            joinRoom(v._name);
-        });
-        container.append(room_name);
-        container.append(commander_name);
-        container.appendTo('#content');
-    })
 }
