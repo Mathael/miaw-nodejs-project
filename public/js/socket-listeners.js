@@ -16,16 +16,17 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         $('#client-count-value').text(data);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (data) {
-        console.log(data);
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
+        if(response.message) sendAlert('success', response);
+        console.log(response);
     });
 
-    socket.on(APP_EVENTS.COMMONS.CON_STATE.FAIL, function () {
-        console.log('Server return fail during process.');
+    socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
+        if(response.status === 'error' && response.message) sendAlert('error', response);
     });
 });
 
 socket.on('disconnect', function(){
-    console.log('Server is shutting down ! You are now disconnected !');
+    sendAlert('info', {message:'Server is shutting down ! You are now disconnected !'});
     socket.disconnect();
 });

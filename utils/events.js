@@ -1,9 +1,9 @@
 module.exports = {
     COMMONS : {
         CON_STATE : {
-            SUCCESS : 'CON_STATE_SUCCESS',
-            FAIL : 'CON_STATE_FAIL'
-        }
+            SUCCESS : 'CON_STATE_SUCCESS'
+        },
+        FAIL : 'CON_STATE_FAIL'
     },
     TO_CLIENT : {
         GENERAL: {

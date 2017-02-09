@@ -51,6 +51,20 @@ body > section {
     margin: 5px 0;
 }
 
+.room {
+    display: inline-block;
+    width: 400px;
+    border: 1px solid black;
+    padding: 4px;
+    margin: 5px;
+}
+
+.room > h3 {
+    margin-top: 0;
+    text-align: center;
+    background-color: lightblue;
+}
+
 footer {
     width: 100%;
     border: 1px solid black;

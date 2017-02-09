@@ -4,29 +4,36 @@ var pageManager = {
 
         clearBody();
 
+        var room_list = $('<section>');
+        var new_room_form = $('<section>');
+
         $.each(data, function (k,v) {
             var container = $('<article>');
-            var room_name = $('<p>');
+            var room_name = $('<h3>');
             var commander_name = $('<p>');
             var size = $('<span>');
 
-            room_name.text(v._name);
+            container.addClass('room');
 
-            if(v._commander)
-                commander_name.text(v._commander._username);
-            else
-                (commander_name.text('Salon créé par : Inconnu'));
+            room_name.text(v._name);
+            room_name.css('text-align', 'center');
+
+            v._commander ? commander_name.text(v._commander._username) : commander_name.text('Salon créé par : Inconnu');
 
             size.text(' ('+(v._members.length + (v._commander ? 1 : 0)) +')');
             room_name.append(size);
 
+            container.append(room_name);
+            container.append(commander_name);
+
             container.on('click', function(){
                 application.joinRoom(v._name);
             });
-            container.append(room_name);
-            container.append(commander_name);
-            container.appendTo('#content');
+
+            room_list.append(container);
         });
+
+        room_list.appendTo('#content');
 
         if(data == undefined || data.length == 0) {
             $('<p>').text("Il n'y a aucun salon pour le moment").appendTo('#content');
@@ -40,7 +47,8 @@ var pageManager = {
             application.createRooms(newRoomInputName.val());
         });
 
-        newRoomInputName.appendTo('#content');
-        createButton.appendTo('#content');
+        new_room_form.append(newRoomInputName);
+        new_room_form.append(createButton);
+        new_room_form.appendTo('#content');
     }
 };

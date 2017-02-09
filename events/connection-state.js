@@ -54,6 +54,5 @@ module.exports = function (io,global) {
 
         // Global broadcast on new client connect
         io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, global.clients.length);
-
     });
 };
