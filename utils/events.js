@@ -12,6 +12,7 @@ module.exports = {
         ROOM : {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
             JOIN : 'EVENT_ROOM_JOIN',
+            JOIN_SUCCESS : 'EVENT_ROOM_JOIN_SUCCESS',
             CREATE : 'EVENT_ROOM_CREATE'
         }
     },

@@ -31,44 +31,11 @@ module.exports = function (io,global) {
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.CREATE, function (data) {
-            console.log(data);
             roomController.create(this, data);
         });
 
-        socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (data) {
-            console.log('Not implemented yet.', data);
-            var room = roomService.findOne(data.roomName);
-
-            if(!room) {
-                socket.emit(APP_EVENTS.COMMONS.CON_STATE.FAIL);
-                return;
-            }
-
-            if(room._isLocked) {
-                socket.emit(APP_EVENTS.COMMONS.CON_STATE.FAIL);
-                return;
-            }
-
-            /*
-             if(room.hasUser(client)) {
-             res.send({
-             status: 'fail',
-             message: 'User already in this room'
-             });
-             return;
-             }*/
-
-            room._members.push(client.id);
-
-            client.join(room._nsp);
-
-            console.log({
-                status: 'success',
-                room: room
-            });
-
-            // TODO: remove me : Notify to all members that was already in this room (except the current client)
-            client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
+            roomController.join(socket, room_name);
         });
 
         //////////////////////////////////////////////////

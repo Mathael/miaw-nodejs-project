@@ -7,5 +7,10 @@ var application = {
     createRooms : function (name) {
         console.log('emitting in createRoom() with event name ' + APP_EVENTS.TO_SERVER.ROOM.CREATE);
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.CREATE, name);
+    },
+
+    joinRoom : function (name) {
+        console.log('emitting in joinRoom() with event name ' + APP_EVENTS.TO_SERVER.ROOM.JOIN);
+        socket.emit(APP_EVENTS.TO_SERVER.ROOM.JOIN, name);
     }
 };

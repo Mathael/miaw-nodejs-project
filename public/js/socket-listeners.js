@@ -3,7 +3,6 @@ socket.on('event', function(data) {
 });
 
 socket.on('CON_STATE_SUCCESS', function(data) {
-    console.log(data);
     sessionStorage.setItem('socketId', data.id);
     APP_EVENTS = data.payload;
 
@@ -14,10 +13,16 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
-        // TODO: move DOM logic
         $('#client-count-value').text(data);
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (data) {
+        console.log(data);
+    });
+
+    socket.on(APP_EVENTS.COMMONS.CON_STATE.FAIL, function () {
+        console.log('Server return fail during process.');
+    });
 });
 
 socket.on('disconnect', function(){

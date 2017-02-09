@@ -9,10 +9,10 @@ function Room(name, commander) {
     this._isLocked = false; // TODO: turn to true by default to allow only commander to configure his channel and put 'ON' when is ready
 }
 
-method.hasUser = function (user) {
-    return this._members.find(function (r) {
-        return r.id == user.id;
-    }).length == 1;
+method.hasUser = function (userId) {
+    return this._members.length > 0 ? this._members.filter(function (id) {
+        return id == userId
+    }).length == 1 : false;
 };
 
 method.isEmpty = function () {

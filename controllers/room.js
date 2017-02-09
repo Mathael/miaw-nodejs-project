@@ -8,6 +8,32 @@ module.exports = {
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);
     },
 
+    join: function (client, room_name) {
+        var room = roomService.findOne(room_name);
+
+        if(!room) {
+            client.emit(APP_EVENTS.COMMONS.CON_STATE.FAIL);
+            return;
+        }
+
+        if(room._isLocked) {
+            client.emit(APP_EVENTS.COMMONS.CON_STATE.FAIL);
+            return;
+        }
+
+
+         if(room.hasUser(client.id)) {
+             client.emit(APP_EVENTS.COMMONS.CON_STATE.FAIL);
+            return;
+         }
+
+        room._members.push(client.id);
+
+        client.join(room._nsp);
+        client.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, {status:'success', message:'Room joined successful'});
+        client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
+    },
+
     findAll: function (socket) {
         console.log('[ROOM Controller] retrieve all rooms.');
         socket.emit(roomService.rooms);

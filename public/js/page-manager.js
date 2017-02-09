@@ -21,7 +21,7 @@ var pageManager = {
             room_name.append(size);
 
             container.on('click', function(){
-                //application(v._name);
+                application.joinRoom(v._name);
             });
             container.append(room_name);
             container.append(commander_name);
