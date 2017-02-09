@@ -1,8 +1,13 @@
 var pageManager = {
 
+    clearBody : function() {
+        $('#content').empty();
+    },
+
+
     displayRooms: function(data) {
 
-        clearBody();
+        this.clearBody();
 
         var room_list = $('<section>');
         var new_room_form = $('<section>');
@@ -18,7 +23,7 @@ var pageManager = {
             room_name.text(v._name);
             room_name.css('text-align', 'center');
 
-            v._commander ? commander_name.text(v._commander._username) : commander_name.text('Salon créé par : Inconnu');
+            v._commander ? commander_name.text(v._commander._username) : commander_name.text('Le créateur du salon est anonyme.');
 
             size.text(' ('+(v._members.length + (v._commander ? 1 : 0)) +')');
             room_name.append(size);
@@ -44,11 +49,18 @@ var pageManager = {
 
         createButton.text("Créer un nouveau salon");
         createButton.on('click', function () {
-            application.createRooms(newRoomInputName.val());
+            //application.createRooms(newRoomInputName.val());
+            pageManager.displayRoomCreation(newRoomInputName.val());
         });
 
         new_room_form.append(newRoomInputName);
         new_room_form.append(createButton);
         new_room_form.appendTo('#content');
+    },
+
+    displayRoomCreation : function (data) {
+        console.log('displayRoomCreation()');
+
+
     }
 };
