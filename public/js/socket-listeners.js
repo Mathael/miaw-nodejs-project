@@ -3,8 +3,8 @@ socket.on('event', function(data) {
 });
 
 socket.on('CON_STATE_SUCCESS', function(data) {
-    sessionStorage.setItem('socketId', data.id);
-    APP_EVENTS = data.payload;
+    sessionStorage.setItem('socketId', data.payload.id);
+    APP_EVENTS = data.payload.events;
 
     // Add all listeners here
 

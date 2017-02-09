@@ -1,4 +1,6 @@
 var APP_EVENTS = require('../utils/events');
+var Response = require('../models/response');
+
 module.exports = function (io,global) {
 
     io.on('connection', function (socket) {
@@ -9,11 +11,7 @@ module.exports = function (io,global) {
         var roomController = require('../controllers/room');
 
         // Send all availables events to front application
-        socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, {
-            id: socket.id,
-            message: 'Connection successful',
-            payload: require('../utils/events')
-        });
+        socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
         socket.on('disconnect', function (data) {
