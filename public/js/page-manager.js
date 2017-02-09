@@ -4,7 +4,6 @@ var pageManager = {
         $('#content').empty();
     },
 
-
     displayRooms: function(data) {
 
         this.clearBody();
@@ -26,8 +25,8 @@ var pageManager = {
             v._commander ? commander_name.text(v._commander._username) : commander_name.text('Le créateur du salon est anonyme.');
 
             size.text(' ('+(v._members.length + (v._commander ? 1 : 0)) +')');
-            room_name.append(size);
 
+            room_name.append(size);
             container.append(room_name);
             container.append(commander_name);
 
@@ -59,8 +58,18 @@ var pageManager = {
     },
 
     displayRoomCreation : function (data) {
-        console.log('displayRoomCreation()');
+        console.log('displayRoomCreation()', data);
+        var self = this;
 
-
+        requester('/room/create', null,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+            });
+        });
     }
 };

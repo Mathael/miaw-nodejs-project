@@ -7,7 +7,7 @@ module.exports = function (app,io) {
      * @Controller used to test render in NodeJS
      */
     app.get('/', function (req, res) {
-        res.render('default/index.ejs', {page: 1});
+        res.render('default/index.ejs');
     });
 
     /**
@@ -35,6 +35,10 @@ module.exports = function (app,io) {
         console.log('user 2 has role ROLE_ADMIN ? : ', user2.hasRole('ROLE_ADMIN'));
 
         res.render('default/index.ejs', {page: 0});
+    });
+
+    app.get('/room/create', function (req, res) {
+        res.render('rooms/create.ejs')
     });
 
     console.log('Default controller loaded successful');

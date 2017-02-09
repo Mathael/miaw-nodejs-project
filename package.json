@@ -1,24 +1,25 @@
 {
-    "name": "node-project",
-    "version": "1.0.0",
-    "description": "",
-    "main": "app.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://Yacancoatl@bitbucket.org/Yacancoatl/node-project.git"
-    },
-    "author": "Leboc Philippe, Kevin Lextrait, Charlotte Rossi",
-    "license": "ISC",
-    "homepage": "https://bitbucket.org/Yacancoatl/node-project#readme",
-    "dependencies": {
-        "body-parser": "^1.16.0",
-        "ejs": "^2.5.5",
-        "express": "^4.14.0",
-        "helmet": "^3.4.0",
-        "mysql": "^2.12.0",
-        "socket.io": "^1.7.2"
-    }
+  "name": "node-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Yacancoatl@bitbucket.org/Yacancoatl/node-project.git"
+  },
+  "author": "Leboc Philippe, Kevin Lextrait, Charlotte Rossi",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/Yacancoatl/node-project#readme",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "helmet": "^3.4.0",
+    "mysql": "^2.12.0",
+    "socket.io": "^1.7.2",
+    "uuid": "^3.0.1"
+  }
 }

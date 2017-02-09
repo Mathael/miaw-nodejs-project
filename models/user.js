@@ -1,8 +1,10 @@
+const uuidV4 = require('uuid/v4');
+
 // Class User
 var method = User.prototype;
 
 function User(username, password, roles) {
-    this._id = guid();
+    this._id = uuidV4();
     this._username = username;
     this._password = password;
     this._roles = roles;
