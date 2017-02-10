@@ -71,5 +71,64 @@ var pageManager = {
                     message: 'Le serveur ne répond pas à votre requête'
             });
         });
+    },
+
+    nextQuestionBuilder: function () {
+        var fieldsetElement = $('#selector-question');
+
+        var question = new Question();
+        question.text = $(fieldsetElement).find('input[name="question-text"]').val();
+        question.type = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val();
+        question.answers = [];
+
+        $(fieldsetElement).find('.selector-question-true').each(function(ke, input){
+            var inputValue = $(input).val();
+            if(inputValue != null && inputValue != '')
+            {
+                var answer = new Answer();
+                answer.text = inputValue;
+                answer.good = true;
+                question.answers.push(answer);
+            }
+        });
+
+        $(fieldsetElement).find('.selector-question-false').each(function(ke, input){
+            var inputValue = $(input).val();
+            if(inputValue != null && inputValue != '')
+            {
+                var answer = new Answer();
+                answer.text = inputValue;
+                answer.good = false;
+                question.answers.push(answer);
+            }
+
+        });
+
+        global.questions.push(question);
+
+        var li = $('<li>').text(question.text);
+        $('#selector-questions-previsualisation').append(li);
+    },
+
+    addGoodAnswer : function() {
+        $('#selector-answer-good').append('<input type="text" class="selector-question-true display-block" />');
+    },
+
+    addBadAnswer : function() {
+        $('#selector-answer-bad').append('<input type="text" class="selector-question-false display-block" />');
+    },
+
+    validateRoomCreation: function () {
+        //TODO: check global.questions.length
+
+        var myRoom = new Room();
+        myRoom.room_name = $('input[name="room-name"]').val();
+        myRoom.room_username = $('input[name="room-username"]').val();
+        myRoom.room_descr = $('input[name="room-descr"]').val();
+        myRoom.room_password = $('input[name="room-password"]').val();
+        myRoom.questions = global.questions;
+
+        global.questions = [];
+        application.createRoom(myRoom);
     }
 };

@@ -1,6 +1,15 @@
 var APP_EVENTS = null;
 var socket = io();
 
+// Variable globale à l'application front
+var global = {
+    questions: []
+};
+
+var Room = function() {};
+var Question = function() {};
+var Answer = function () {};
+
 /**
  * Permet d'afficher des alerte en haut à droite de l'écran.
  * @param type string => définit la couleur d'affichage

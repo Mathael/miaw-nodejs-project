@@ -47,8 +47,11 @@ nav {
 }
 
 body > section {
-    border: 1px solid black;
     margin: 5px 0;
+}
+
+fieldset {
+    margin: 10px 0;
 }
 
 .room {
@@ -63,6 +66,28 @@ body > section {
     margin-top: 0;
     text-align: center;
     background-color: lightblue;
+}
+
+.input-block { margin: 4px 0; }
+.input-block > label {
+    display: inline-block;
+    width: 225px;
+    text-align: right;
+}
+
+.question-block { margin: 8px 0; }
+.question-block > input[type='text'], .answer-block > input[type='text'] {width: 325px;}
+.answer-type-block { display: inline-block; }
+
+.display-block {display: block;}
+.display-inline-block {display: inline-block;}
+.float-right {float:right;}
+.margin-top-15px {margin-top: 15px;}
+.margin-bottom-15px {margin-bottom: 15px;}
+
+hr {
+    color: black;
+    border-color: black;
 }
 
 footer {

@@ -4,9 +4,9 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.GET_ALL);
     },
 
-    createRooms : function (name) {
-        console.log('emitting in createRoom() with event name ' + APP_EVENTS.TO_SERVER.ROOM.CREATE);
-        socket.emit(APP_EVENTS.TO_SERVER.ROOM.CREATE, name);
+    createRoom : function (room) {
+        console.log('emitting in validateRoomCreation() with event name ' + APP_EVENTS.TO_SERVER.ROOM.CREATE);
+        socket.emit(APP_EVENTS.TO_SERVER.ROOM.CREATE, room);
     },
 
     joinRoom : function (name) {
