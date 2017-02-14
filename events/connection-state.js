@@ -28,6 +28,10 @@ module.exports = function (io,global) {
             roomController.findOne(this);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.GET_MY_ROOM_INFORMATIONS, function () {
+            roomController.findRoomByMember(socket);
+        });
+
         socket.on(APP_EVENTS.TO_SERVER.ROOM.CREATE, function (data) {
             roomController.create(this, data);
         });

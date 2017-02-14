@@ -4,21 +4,24 @@ module.exports = {
 
     rooms : [],
 
-    create : function (name, commander) {
-        var room = new Room(name, commander);
+    create : function (object) {
+        if(!object) return null;
+
+        var room = new Room(object.room_name, null);
 
         // If current commander is the commander of another room, it will not able to create another one
+        /*
         var one = this.rooms.find(function (room) {
             return room._commander && room._commander._id == commander._id;
         });
 
         if(one != null) {
             return false;
-        }
+        }*/
 
         this.rooms.push(room);
-        console.log('[RoomService] new Room created with name :', name);
-        return true;
+        console.log('[RoomService] new Room created with name :', object.room_name);
+        return room;
     },
 
     remove : function (room) {

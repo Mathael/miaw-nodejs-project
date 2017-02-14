@@ -4,6 +4,33 @@ var pageManager = {
         $('#content').empty();
     },
 
+    displayMyRoom : function (room) {
+        if(!room) return;
+
+        this.clearBody();
+
+        requester('/room', null,
+            function (data) {
+                data = data.replace("{{room-name}}", room._name);
+                $('#content').append(data);
+
+                var btnLock = $('#toggleRoomLock');
+                console.log($(btnLock));
+                if(room._isLocked) {
+                    $(btnLock).val('Déveouiller le salon');
+                    console.log(btnLock.val())
+                } else {
+                    btnLock.val('Verouiller le salon');
+                }
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à la requête'
+                });
+            }
+        );
+    },
+
     displayRooms: function(data) {
 
         this.clearBody();
@@ -68,7 +95,7 @@ var pageManager = {
             },
             function() {
                 sendAlert('error', {
-                    message: 'Le serveur ne répond pas à votre requête'
+                    message: 'Le serveur ne répond pas à la requête'
             });
         });
     },

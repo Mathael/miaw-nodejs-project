@@ -13,12 +13,14 @@ module.exports = {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
             JOIN : 'EVENT_ROOM_JOIN',
             JOIN_SUCCESS : 'EVENT_ROOM_JOIN_SUCCESS',
-            CREATE : 'EVENT_ROOM_CREATE'
+            CREATE : 'EVENT_ROOM_CREATE',
+            INFORMATIONS : 'INFORMATIONS'
         }
     },
     TO_SERVER : {
         ROOM : {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
+            GET_MY_ROOM_INFORMATIONS : 'GET_MY_ROOM_INFORMATIONS',
             JOIN : 'EVENT_ROOM_JOIN',
             CREATE : 'EVENT_ROOM_CREATE'
         }

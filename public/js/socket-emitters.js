@@ -4,6 +4,10 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.GET_ALL);
     },
 
+    showMyRoom : function () {
+        socket.emit(APP_EVENTS.TO_SERVER.ROOM.GET_MY_ROOM_INFORMATIONS);
+    },
+
     createRoom : function (room) {
         console.log('emitting in validateRoomCreation() with event name ' + APP_EVENTS.TO_SERVER.ROOM.CREATE);
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.CREATE, room);

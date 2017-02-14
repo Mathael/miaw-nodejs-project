@@ -12,13 +12,23 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayRooms(data);
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.INFORMATIONS, function (data) {
+        console.log(data);
+        pageManager.displayMyRoom(data);
+    });
+
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
         $('#client-count-value').text(data);
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
-        if(response.message) sendAlert('success', response);
         console.log(response);
+
+        if(response == 'success' && response.payload == null && response.message) sendAlert('success', response);
+        if(response.payload && response.payload.isCommander === true) {
+            sendAlert('warning', response);
+            console.log('TODO: afficher la page professeur');
+        }
     });
 
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {

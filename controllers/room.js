@@ -3,10 +3,19 @@ var roomService = require('../services/room-service');
 var Response = require('../models/response');
 module.exports = {
 
-    create: function (socket, name) {
-        console.log('[ROOM Controller] create rooms.');
-        roomService.create(name, null);
-        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);
+    create: function (socket, object) {
+        console.log('[RoomController] creating rooms.');
+
+        // Trying to create a Room
+        var room = roomService.create(object);
+        if(room){
+            room._commander = socket.id;
+            socket.join(room._nsp);
+            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
+            return;
+        }
+
+        socket.emit(APP_EVENTS.COMMONS.FAIL);
     },
 
     join: function (client, room_name) {
@@ -22,11 +31,10 @@ module.exports = {
             return;
         }
 
-
-         if(room.hasUser(client.id)) {
-             client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
+        if(room.hasUser(client.id) || room._commander == client.id) {
+            client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
             return;
-         }
+        }
 
         room._members.push(client.id);
 
@@ -43,6 +51,21 @@ module.exports = {
     findOne: function (socket) {
         console.log('[ROOM Controller] retrieve all rooms.');
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);
+    },
+
+    findRoomByMember : function (socket) {
+        var room = roomService.rooms.find(function (room) {
+            return room._members.find(function (member) {
+                return member == socket.id;
+            }) || room._commander == socket.id;
+        });
+
+        if(room == null) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne faites partie d\'aucun salon'));
+            return;
+        }
+
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.INFORMATIONS, room);
     },
 
     remove: function (socket, name) {
