@@ -32,6 +32,12 @@ var pageManager = {
             var room_name = $('<h3>');
             var commander_name = $('<p>');
             var size = $('<span>');
+            var join = $('<button>');
+            join.text("join room");
+            join.on('click',function () {
+                pageManager.displayJoinForm(v._name);
+
+            });
 
             container.addClass('room');
 
@@ -45,10 +51,12 @@ var pageManager = {
             room_name.append(size);
             container.append(room_name);
             container.append(commander_name);
-
+/*
             container.on('click', function(){
                 application.joinRoom(v._name);
             });
+*/
+            container.append(join);
 
             room_list.append(container);
         });
@@ -138,5 +146,74 @@ var pageManager = {
 
         global.questions = [];
         application.createRoom(myRoom);
+    },
+
+    displayJoinForm : function (data) {
+
+        var self = this;
+        var roomName = data;
+
+        requester('/room/joinRoom', null,
+            function (data) {
+                //self.clearBody();
+                $('#content').append(data);
+                var join = $('#join');
+                join.on('click',function () {
+                    var name = $('#name').val();
+                    if(name){
+                        application.joinRoom(roomName);
+                        self.insideRoom();
+                    }else{
+                        alert("merci de saisir un nom");
+                    }
+                })
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    insideRoom : function (data) {
+
+        var self = this;
+
+        requester('/room/insideRoom', null,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    showQuestion : function (data) {
+
+        var self = this;
+
+        requester('/room/showQuestion', data,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    startQCM : function (data) {
+        var self = this;
+
+        self.clearBody();
+        $('#content').append('<h1>Le questionnaire va commencer</h1>');
+
     }
 };

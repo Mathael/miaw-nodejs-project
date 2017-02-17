@@ -16,6 +16,13 @@ module.exports = {
             CREATE : 'EVENT_ROOM_CREATE',
             INFORMATIONS : 'INFORMATIONS',
             LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
+            CREATE : 'EVENT_ROOM_CREATE'
+        },
+        PROF :{
+            START : 'EVENT_PROF_START',
+            STOP :'EVENT_PROF_STOP',
+            SHOWSTAT : 'EVENT_PROF_STAT',
+            NEXT : 'EVENT_PROF_NEXT'
         }
     },
     TO_SERVER : {
@@ -26,6 +33,13 @@ module.exports = {
             CREATE : 'EVENT_ROOM_CREATE',
             UNLOCK : 'EVENT_ROOM_UNLOCK',
             LOCK : 'EVENT_ROOM_LOCK'
+            CREATE : 'EVENT_ROOM_CREATE'
+        },
+        PROF :{
+            START : 'EVENT_PROF_START',
+            STOP :'EVENT_PROF_STOP',
+            SHOWSTAT : 'EVENT_PROF_STAT',
+            NEXT : 'EVENT_PROF_NEXT'
         }
     }
 };
