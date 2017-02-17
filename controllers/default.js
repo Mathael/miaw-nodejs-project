@@ -41,5 +41,18 @@ module.exports = function (app,io) {
         res.render('rooms/create.ejs')
     });
 
+    app.get('/room/joinRoom', function (req, res) {
+        res.render('rooms/joinRoom.ejs')
+    });
+
+    app.get('/room/insideRoom', function (req, res) {
+        res.render('rooms/insideRoom.ejs')
+    });
+
+    app.get('/room/showQuestion', function (req, res) {
+        var id = req.query.id;
+        res.render('rooms/question.ejs',{ question : id})
+    });
+
     console.log('Default controller loaded successful');
 };

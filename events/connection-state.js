@@ -25,6 +25,7 @@ module.exports = function (io,global) {
         //////////////////////////////////////////////////
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.GET_ALL, function () {
+            roomController.create(socket,"test");
             roomController.findOne(this);
         });
 
@@ -39,6 +40,14 @@ module.exports = function (io,global) {
         //////////////////////////////////////////////////
         ///                 USER EVENTS                ///
         //////////////////////////////////////////////////
+
+        socket.on(APP_EVENTS.TO_SERVER.PROF.START, function (room_name) {
+            roomController.start(this,room_name);
+        });
+
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
+            roomController.nextQuestion(this,name,id_question);
+        });
 
         //////////////////////////////////////////////////
         ///               QUESTION EVENTS              ///

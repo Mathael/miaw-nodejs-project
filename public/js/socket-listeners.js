@@ -12,6 +12,15 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayRooms(data);
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
+        pageManager.startQCM(data);
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data) {
+        var id = "id="+data;
+        pageManager.showQuestion(id);
+    });
+
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
         $('#client-count-value').text(data);
     });
