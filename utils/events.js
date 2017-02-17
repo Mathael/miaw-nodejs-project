@@ -14,7 +14,8 @@ module.exports = {
             JOIN : 'EVENT_ROOM_JOIN',
             JOIN_SUCCESS : 'EVENT_ROOM_JOIN_SUCCESS',
             CREATE : 'EVENT_ROOM_CREATE',
-            INFORMATIONS : 'INFORMATIONS'
+            INFORMATIONS : 'INFORMATIONS',
+            LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
         }
     },
     TO_SERVER : {

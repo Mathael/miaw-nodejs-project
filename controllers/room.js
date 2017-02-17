@@ -52,11 +52,12 @@ module.exports = {
     toggleLock: function (client, room_name, isLockRequest) {
         if(room_name) {
             // TODO: check if the client is the commander of the room
+
             var result = isLockRequest ? roomService.toggleLock(room_name, true) : roomService.toggleLock(room_name, false);
-            if(result)
-                console.log('room '+room_name+' is know '+ isLockRequest + ' (true=locked;false=unlocked)');
-            else
-                console.log('toggleLock failed');
+
+            result ?
+                client.emit(APP_EVENTS.TO_CLIENT.ROOM.LOCK_STATE, new Response('success', isLockRequest, null)) :
+                client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action'));
         }
     },
 

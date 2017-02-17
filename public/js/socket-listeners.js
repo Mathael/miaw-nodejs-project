@@ -34,6 +34,14 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         }
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.LOCK_STATE, function (response) {
+        if(global.room) {
+            global.room._isLocked = response.payload;
+            console.log('The room is now locked ? '+global.room._isLocked);
+            console.log('TODO: apply result to the UI');
+        }
+    });
+
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
         if(response.status === 'error' && response.message) sendAlert('error', response);
     });
