@@ -1,26 +1,78 @@
 
         <form>
-            <fieldset>
-                <legend>Information sur le salon</legend>
-                <label for="room-name">
+            <h3>Informations sur le salon</h3>
+            <hr/>
+            <div id="general-info">
+                <div class="input-block">
+                    <label for="room-name">Nom du salon</label>
                     <input type="text" id="room-name" name="room-name" />
-                </label>
-                <label for="room-user-name">
-                    <input type="text" id="room-user-name" name="room-user-name" disabled />
-                </label>
-                <label for="room-password">
+                </div>
+                <div class="input-block">
+                    <label for="room-descr">Description du salon</label>
+                    <textarea id="room-descr" name="room-descr" rows="2" cols="30"></textarea>
+                </div>
+                <div class="input-block">
+                    <label for="room-username">Nom du propriétaire du salon</label>
+                    <input type="text" id="room-username" name="room-username" placeholder="TODO: implement User" disabled />
+                </div>
+                <div class="input-block">
+                    <label for="room-password">Mot de passe du salon</label>
                     <input type="password" id="room-password" name="room-password" />
-                </label>
-                <label for="room-password-repeat">
+                </div>
+                <div class="input-block">
+                    <label for="room-password-repeat">Confirmation du mot de passe</label>
                     <input type="password" id="room-password-repeat" />
-                </label>
-            </fieldset>
-            <fieldset>
-                <legend>Création des questions</legend>
+                </div>
+            </div>
+            <h3>Création des questions</h3>
+            <hr/>
+            <div class="display-block">
+                <input type="button" value="Valider la création de cette question" onclick="pageManager.nextQuestionBuilder();" />
+            </div>
+            <div id="questions-list">
+                <fieldset id="selector-question" class="display-inline-block">
+                    <legend>Nouvelle question</legend>
+                    <div class="display-block answer-type-block margin-top-15px">
+                        <label>Type de question : </label>
+                        <input type="radio" name="answer-type" value="single-choice" id="single-choice" checked />
+                        <label for="single-choice">Réponse unique</label>
+                        <input type="radio" name="answer-type" value="multi-choice" id="multi-choice" />
+                        <label for="multi-choice">Réponse multiple</label>
+                    </div>
+                    <hr/>
+                    <div class="question-block">
+                        <label for="question-text">Question</label>
+                        <input type="text" name="question-text" />
+                    </div>
+                    <hr/>
+                    <div class="display-block">
+                        <div class="display-block margin-bottom-15px">
+                            <input type="button" value="Ajouter une bonne réponse possible" onclick="pageManager.addGoodAnswer();" />
+                            <input type="button" value="Ajouter une mauvaise réponse possible" class="float-right" onclick="pageManager.addBadAnswer();" />
+                        </div>
+                        <div class="display-inline-block">
+                            <label class="display-block">Liste des bonnes réponses</label>
+                            <div id="selector-answer-good" class="display-block answer-block margin-bottom-5px margin-top-5px">
+                                <input type="text" class="display-block selector-question-true" required />
+                            </div>
+                        </div>
+                        <div class="display-inline-block">
+                            <label class="display-block">Liste des mauvaises réponses</label>
+                            <div id="selector-answer-bad" class="display-block answer-block margin-bottom-5px margin-top-5px">
+                                <input type="text" class="display-block selector-question-false" required />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="display-inline-block">
+                    <h3>Liste des questions validées</h3>
+                    <ul id="selector-questions-previsualisation"></ul>
+                </div>
+            </div>
+            <h3>Sélection parmis les questionnaires déjà réalisés</h3>
+            <hr/>
+            <div>
                 <p>TODO</p>
-            </fieldset>
-            <fieldset>
-                <legend>Sélection parmis les questionnaires déjà réalisés</legend>
-                <p>TODO</p>
-            </fieldset>
+            </div>
+            <a href="#" onclick="pageManager.validateRoomCreation()">Créer le salon</a>
         </form>

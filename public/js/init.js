@@ -1,6 +1,16 @@
 var APP_EVENTS = null;
 var socket = io();
 
+// Variable globale à l'application front
+var global = {
+    room: null,
+    questions: []
+};
+
+var Room = function() {};
+var Question = function() {};
+var Answer = function () {};
+
 /**
  * Permet d'afficher des alerte en haut à droite de l'écran.
  * @param type string => définit la couleur d'affichage
@@ -44,7 +54,13 @@ var requester = function (route, data, success, error) {
             if(success != undefined && success != null) success(e); else {console.log('success == null')}
         },
         error: function () {
-            if(error != undefined && error != null) error();
+            if(error != undefined && error != null) error(); else requestFailure();
         }
     })
+};
+
+var requestFailure = function() {
+    sendAlert('error', {
+        message: 'Le serveur ne répond pas à la requête'
+    });
 };

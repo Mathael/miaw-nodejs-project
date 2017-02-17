@@ -13,7 +13,9 @@ module.exports = {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
             JOIN : 'EVENT_ROOM_JOIN',
             JOIN_SUCCESS : 'EVENT_ROOM_JOIN_SUCCESS',
-            CREATE : 'EVENT_ROOM_CREATE'
+            CREATE : 'EVENT_ROOM_CREATE',
+            INFORMATIONS : 'INFORMATIONS',
+            LOCK_STATE : 'EVENT_ROOM_LOCK_STATE'
         },
         PROF :{
             START : 'EVENT_PROF_START',
@@ -25,8 +27,11 @@ module.exports = {
     TO_SERVER : {
         ROOM : {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
+            GET_MY_ROOM_INFORMATIONS : 'GET_MY_ROOM_INFORMATIONS',
             JOIN : 'EVENT_ROOM_JOIN',
-            CREATE : 'EVENT_ROOM_CREATE'
+            CREATE : 'EVENT_ROOM_CREATE',
+            UNLOCK : 'EVENT_ROOM_UNLOCK',
+            LOCK : 'EVENT_ROOM_LOCK'
         },
         PROF :{
             START : 'EVENT_PROF_START',

@@ -41,6 +41,11 @@ module.exports = function (app,io) {
         res.render('rooms/create.ejs')
     });
 
+    app.get('/room', function (req, res) {
+        // TODO: get socket id as parameter to check access
+        res.render('rooms/commander_my_room.ejs');
+    });
+
     app.get('/room/joinRoom', function (req, res) {
         res.render('rooms/joinRoom.ejs')
     });
