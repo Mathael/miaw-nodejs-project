@@ -1,4 +1,4 @@
-// Class Room
+// Class Response
 var method = Response.prototype;
 
 function Response(status, payload, message) {
