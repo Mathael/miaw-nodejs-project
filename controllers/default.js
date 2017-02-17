@@ -41,5 +41,10 @@ module.exports = function (app,io) {
         res.render('rooms/create.ejs')
     });
 
+    app.get('/room', function (req, res) {
+        // TODO: get socket id as parameter to check access
+        res.render('rooms/commander_my_room.ejs');
+    });
+
     console.log('Default controller loaded successful');
 };
