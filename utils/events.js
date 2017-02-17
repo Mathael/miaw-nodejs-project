@@ -15,8 +15,7 @@ module.exports = {
             JOIN_SUCCESS : 'EVENT_ROOM_JOIN_SUCCESS',
             CREATE : 'EVENT_ROOM_CREATE',
             INFORMATIONS : 'INFORMATIONS',
-            LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
-            CREATE : 'EVENT_ROOM_CREATE'
+            LOCK_STATE : 'EVENT_ROOM_LOCK_STATE'
         },
         PROF :{
             START : 'EVENT_PROF_START',
@@ -33,7 +32,6 @@ module.exports = {
             CREATE : 'EVENT_ROOM_CREATE',
             UNLOCK : 'EVENT_ROOM_UNLOCK',
             LOCK : 'EVENT_ROOM_LOCK'
-            CREATE : 'EVENT_ROOM_CREATE'
         },
         PROF :{
             START : 'EVENT_PROF_START',
