@@ -25,7 +25,7 @@ module.exports = function (io,global) {
         //////////////////////////////////////////////////
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.GET_ALL, function () {
-            roomController.findOne(this);
+            roomController.findAll(socket);
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.GET_MY_ROOM_INFORMATIONS, function () {
