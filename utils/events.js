@@ -22,7 +22,9 @@ module.exports = {
             GET_ALL : 'EVENT_ROOM_GET_ALL',
             GET_MY_ROOM_INFORMATIONS : 'GET_MY_ROOM_INFORMATIONS',
             JOIN : 'EVENT_ROOM_JOIN',
-            CREATE : 'EVENT_ROOM_CREATE'
+            CREATE : 'EVENT_ROOM_CREATE',
+            UNLOCK : 'EVENT_ROOM_UNLOCK',
+            LOCK : 'EVENT_ROOM_LOCK'
         }
     }
 };

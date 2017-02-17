@@ -15,18 +15,7 @@ var pageManager = {
                 $('#content').append(data);
 
                 var btnLock = $('#toggleRoomLock');
-                console.log($(btnLock));
-                if(room._isLocked) {
-                    $(btnLock).val('Déveouiller le salon');
-                    console.log(btnLock.val())
-                } else {
-                    btnLock.val('Verouiller le salon');
-                }
-            },
-            function() {
-                sendAlert('error', {
-                    message: 'Le serveur ne répond pas à la requête'
-                });
+                room._isLocked ? btnLock.text('Déveouiller le salon') : btnLock.text('Verouiller le salon');
             }
         );
     },
@@ -71,15 +60,11 @@ var pageManager = {
         }
 
         var createButton = $('<button>');
-        var newRoomInputName = $('<input>');
-
         createButton.text("Créer un nouveau salon");
         createButton.on('click', function () {
-            //application.createRooms(newRoomInputName.val());
-            pageManager.displayRoomCreation(newRoomInputName.val());
+            pageManager.displayRoomCreation();
         });
 
-        new_room_form.append(newRoomInputName);
         new_room_form.append(createButton);
         new_room_form.appendTo('#content');
     },
@@ -92,12 +77,8 @@ var pageManager = {
             function (data) {
                 self.clearBody();
                 $('#content').append(data);
-            },
-            function() {
-                sendAlert('error', {
-                    message: 'Le serveur ne répond pas à la requête'
-            });
-        });
+            }
+        );
     },
 
     nextQuestionBuilder: function () {

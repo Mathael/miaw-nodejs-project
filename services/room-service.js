@@ -7,6 +7,10 @@ module.exports = {
     create : function (object) {
         if(!object) return null;
 
+        if(this.rooms.find(function (room) {
+            return room.name == object.room_name;
+        }) != null) return null;
+
         var room = new Room(object.room_name, null);
 
         // If current commander is the commander of another room, it will not able to create another one
@@ -37,5 +41,12 @@ module.exports = {
         return this.rooms.find(function (r) {
             return r._name == name
         });
+    },
+
+    toggleLock: function (room_name, isLockRequest) {
+        var room = this.findOne(room_name);
+        if(!room) return false;
+        room._isLocked = isLockRequest;
+        return true; // Notify success to controller
     }
 };

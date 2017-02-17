@@ -40,6 +40,14 @@ module.exports = function (io,global) {
             roomController.join(socket, room_name);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, function (data) {
+            roomController.toggleLock(socket, data.room_name, false);
+        });
+
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.LOCK, function (data) {
+            roomController.toggleLock(socket, data.room_name, true);
+        });
+
         //////////////////////////////////////////////////
         ///                 USER EVENTS                ///
         //////////////////////////////////////////////////

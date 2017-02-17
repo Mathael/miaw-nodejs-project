@@ -24,6 +24,9 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
         console.log(response);
 
+        // Front application must known the Room information
+        if(response.payload) global.room = response.payload.room;
+
         if(response == 'success' && response.payload == null && response.message) sendAlert('success', response);
         if(response.payload && response.payload.isCommander === true) {
             sendAlert('warning', response);

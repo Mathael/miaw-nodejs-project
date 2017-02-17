@@ -6,12 +6,18 @@ module.exports = {
     create: function (socket, object) {
         console.log('[RoomController] creating rooms.');
 
+        // Check if Objet required fields are defined
+        if(!object.room_name || !object.questions) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Un ou plusieurs champs requis pour la création ne sont pas valide'));
+            return;
+        }
+
         // Trying to create a Room
         var room = roomService.create(object);
         if(room){
             room._commander = socket.id;
             socket.join(room._nsp);
-            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
+            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
             return;
         }
 
@@ -39,8 +45,19 @@ module.exports = {
         room._members.push(client.id);
 
         client.join(room._nsp);
-        client.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', null, 'Bienvenue dans le salon ' + room_name));
+        client.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:false}, 'Bienvenue dans le salon ' + room_name));
         client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
+    },
+
+    toggleLock: function (client, room_name, isLockRequest) {
+        if(room_name) {
+            // TODO: check if the client is the commander of the room
+            var result = isLockRequest ? roomService.toggleLock(room_name, true) : roomService.toggleLock(room_name, false);
+            if(result)
+                console.log('room '+room_name+' is know '+ isLockRequest + ' (true=locked;false=unlocked)');
+            else
+                console.log('toggleLock failed');
+        }
     },
 
     findAll: function (socket) {
