@@ -24,7 +24,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
-                sendAlert('warning', response);
+                sendAlert('warning', response.message);
             }
 
             global.room = response.payload.room;
@@ -39,12 +39,17 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         }
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, function (response) {
+        sendAlert(response.status, response.message);
+        pageManager.displayRooms(response.payload);
+    });
+
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
-        if(response.status === 'error' && response.message) sendAlert('error', response);
+        if(response.status === 'error' && response.message) sendAlert('error', response.message);
     });
 });
 
 socket.on('disconnect', function(){
-    sendAlert('info', {message:'Server is shutting down ! You are now disconnected !'});
+    sendAlert('info', 'Server is shutting down ! You are now disconnected !');
     socket.disconnect();
 });

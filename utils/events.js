@@ -16,6 +16,7 @@ module.exports = {
             CREATE : 'EVENT_ROOM_CREATE',
             INFORMATIONS : 'INFORMATIONS',
             LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
+            LEAVE : 'EVENT_ROOM_LEAVE'
         }
     },
     TO_SERVER : {
@@ -24,8 +25,10 @@ module.exports = {
             GET_MY_ROOM_INFORMATIONS : 'GET_MY_ROOM_INFORMATIONS',
             JOIN : 'EVENT_ROOM_JOIN',
             CREATE : 'EVENT_ROOM_CREATE',
+            DELETE : 'EVENT_ROOM_DELETE',
             UNLOCK : 'EVENT_ROOM_UNLOCK',
-            LOCK : 'EVENT_ROOM_LOCK'
+            LOCK : 'EVENT_ROOM_LOCK',
+            LEAVE : 'EVENT_ROOM_LEAVE'
         }
     }
 };

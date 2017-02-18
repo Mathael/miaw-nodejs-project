@@ -29,12 +29,12 @@ module.exports = {
     },
 
     remove : function (room) {
-        this.room.splice(this.rooms.indexOf(room), 1);
+        if(room) this.rooms.splice(this.rooms.indexOf(room), 1);
     },
 
     removeByName : function (name) {
         var room = this.findOne(name);
-        if(room) this.remove(room);
+        this.remove(room);
     },
 
     findOne: function (name) {

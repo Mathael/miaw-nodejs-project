@@ -36,6 +36,10 @@ module.exports = function (io,global) {
             roomController.create(this, data);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.DELETE, function (room_name) {
+            roomController.remove(socket, room_name, global);
+        });
+
         socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
             roomController.join(socket, room_name);
         });

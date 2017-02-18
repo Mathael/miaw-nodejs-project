@@ -10,8 +10,8 @@ function Room(name, commander) {
 }
 
 method.hasUser = function (userId) {
-    return this._members.length > 0 ? this._members.filter(function (id) {
-        return id == userId
+    return this._members.length > 0 ? this._members.filter(function (user) {
+        return user._id == userId;
     }).length == 1 : false;
 };
 
