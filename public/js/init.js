@@ -14,25 +14,24 @@ var Answer = function () {};
 /**
  * Permet d'afficher des alerte en haut à droite de l'écran.
  * @param type string => définit la couleur d'affichage
- * @param data Object => données reçues
+ * @param message string => message à afficher
  */
-var sendAlert = function (type, data) {
+var sendAlert = function (type, message) {
     var colors = {
         success: '#27ae60',
         error: '#ae3437',
-        warning: '#ae9901',
         info: '#02c0ff'
     };
     $.amaran({
         'position'  :'top right',
         'inEffect'  :'slideRight',
         'outEffect' :'slideRight',
-        'delay'     : 6000,
+        'delay'     : 8000,
         'theme'     :'colorful',
         'content'   :{
             bgcolor: colors[type] || colors.error,
             color:'#fff',
-            message: data.message || 'Aucun message d\'erreur'
+            message: message || 'Aucun message d\'erreur'
         }
     });
 };

@@ -4,15 +4,34 @@ var method = Room.prototype;
 function Room(name, commander) {
     this._nsp = '/'+name;
     this._name = name;
-    this._commander = commander;
+    this._commander = commander; // TODO: currently its a SOCKET ID. It must be an User Object
     this._members = [];
-    this._isLocked = false; // TODO: turn to true by default to allow only commander to configure his channel and put 'ON' when is ready
+    this._isLocked = true;
 }
 
-method.hasUser = function (userId) {
-    return this._members.length > 0 ? this._members.filter(function (id) {
-        return id == userId
+method.hasUser = function (id) {
+    return this._members.length > 0 ? this._members.filter(function (user) {
+        return user._id == id;
     }).length == 1 : false;
+};
+
+method.getMember = function (memberId) {
+    return this._members.find(function (member) {
+        return member._id == memberId;
+    }) || null;
+};
+
+method.removeMember = function (memberId) {
+    var member = this.getMember(memberId);
+    if(member) {
+        this._members.splice(this._members.indexOf(member), 1);
+        return true;
+    }
+    return false;
+};
+
+method.isCommander = function (id) {
+    return this._commander == id;
 };
 
 method.isEmpty = function () {

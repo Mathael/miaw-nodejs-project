@@ -36,8 +36,12 @@ module.exports = function (io,global) {
             roomController.create(this, data);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.DELETE, function (room_name) {
+            roomController.remove(socket, room_name, global);
+        });
+
         socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
-            roomController.join(socket, room_name);
+            roomController.join(socket, room_name, 'NoName', global);
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, function (data) {
@@ -46,6 +50,10 @@ module.exports = function (io,global) {
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.LOCK, function (data) {
             roomController.toggleLock(socket, data.room_name, true);
+        });
+
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
+            roomController.expel(socket, memberId, global);
         });
 
         //////////////////////////////////////////////////

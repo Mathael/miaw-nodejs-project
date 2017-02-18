@@ -1,18 +1,24 @@
         <section>
             <h2>Salon {{room-name}}</h2>
-            <section id="current_question">
-                <p>Vous devez démarrer le questionnaire.</p>
+            <section class="display-inline-block">
+                <section id="current_question">
+                    <p>Vous devez démarrer le questionnaire.</p>
+                </section>
+                <section id="curret_answers">
+                    <p>Une fois le questionnaire démarré, vous pourrez voir les réponses possibles de la question en cours.</p>
+                </section>
             </section>
-            <section id="curret_answers">
-                <p>Une fois le questionnaire démarré, vous pourrez voir les réponses possibles de la question en cours.</p>
+            <section class="display-inline-block float-right">
+                <h3>Utilisateurs connectés au salon</h3>
+                <div id="room-client-list">
+                    <a href="#" class="link display-block" onclick="application.expelMember(null)"><i class="fa fa-trash-o"></i> LEBOC Philippe (Démo)</a>
+                </div>
             </section>
             <section>
-                <a href="#">Démarrer</a>
-                <a href="#">Question suivante</a>
-                <a href="#">Afficher le graphique</a>
-                <a href="#">Arrêter</a>
+                <a href="#">Démarrer la session</a>
             </section>
             <section>
                 <a id="toggleRoomLock" href="#" onclick="application.toggleRoomLock()"></a>
+                <a href="#" onclick="application.deleteRoom()">Supprimer le salon</a>
             </section>
         </section>
