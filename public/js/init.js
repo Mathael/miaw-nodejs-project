@@ -27,7 +27,7 @@ var sendAlert = function (type, data) {
         'position'  :'top right',
         'inEffect'  :'slideRight',
         'outEffect' :'slideRight',
-        'delay'     : 6000,
+        'delay'     : 8000,
         'theme'     :'colorful',
         'content'   :{
             bgcolor: colors[type] || colors.error,

@@ -18,23 +18,24 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
-        console.log(response);
+        if(response.payload != null) {
+            // Display join success
+            if(response.status && response.message) sendAlert(response.status, response.message);
 
-        // Front application must known the Room information
-        if(response.payload) global.room = response.payload.room;
+            // Notify commander to unlock the room to enable "join room" button
+            if(response.payload.isCommander === true) {
+                sendAlert('warning', response);
+            }
 
-        if(response == 'success' && response.payload == null && response.message) sendAlert('success', response);
-        if(response.payload && response.payload.isCommander === true) {
-            sendAlert('warning', response);
-            console.log('TODO: afficher la page professeur');
+            global.room = response.payload.room;
+            pageManager.displayMyRoom(response.payload.room);
         }
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.LOCK_STATE, function (response) {
         if(global.room) {
             global.room._isLocked = response.payload;
-            console.log('The room is now locked ? '+global.room._isLocked);
-            console.log('TODO: apply result to the UI');
+            pageManager.toggleRoomLockEvent(global.room._isLocked);
         }
     });
 

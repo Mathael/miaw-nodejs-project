@@ -8,16 +8,21 @@ var pageManager = {
         if(!room) return;
 
         this.clearBody();
+        var self = this;
 
         requester('/room', null,
             function (data) {
                 data = data.replace("{{room-name}}", room._name);
                 $('#content').append(data);
 
-                var btnLock = $('#toggleRoomLock');
-                room._isLocked ? btnLock.text('Déveouiller le salon') : btnLock.text('Verouiller le salon');
+                self.toggleRoomLockEvent(room._isLocked);
             }
         );
+    },
+
+    toggleRoomLockEvent: function(isLocked) {
+        var btnLock = $('#toggleRoomLock');
+        isLocked ? btnLock.text('Déverrouiller le salon') : btnLock.text('Verrouiller le salon');
     },
 
     displayRooms: function(data) {
