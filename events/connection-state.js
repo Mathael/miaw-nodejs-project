@@ -52,6 +52,10 @@ module.exports = function (io,global) {
             roomController.toggleLock(socket, data.room_name, true);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
+            roomController.expel(socket, memberId, global);
+        });
+
         //////////////////////////////////////////////////
         ///                 USER EVENTS                ///
         //////////////////////////////////////////////////

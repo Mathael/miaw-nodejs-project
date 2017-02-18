@@ -30,10 +30,8 @@ var application = {
         }
     },
 
-    showRoomMembers: function () {
-        if(global.room) {
-            //socket.emit(APP_EVENTS.TO_SERVER.ROOM.GET_MY_ROOM_INFORMATIONS)
-            //TODO
-        }
+    expelMember : function (id) {
+        if(!id) return;
+        socket.emit(APP_EVENTS.TO_SERVER.ROOM.EXPEL, id);
     }
 };

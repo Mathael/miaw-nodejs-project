@@ -84,6 +84,8 @@ fieldset {
 .float-right {float:right;}
 .margin-top-15px {margin-top: 15px;}
 .margin-bottom-15px {margin-bottom: 15px;}
+.link {color: black; text-decoration: none; cursor: pointer;}
+.link:visited {color: black;}
 
 hr {
     color: black;

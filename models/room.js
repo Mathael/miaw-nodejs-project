@@ -15,6 +15,21 @@ method.hasUser = function (id) {
     }).length == 1 : false;
 };
 
+method.getMember = function (memberId) {
+    return this._members.find(function (member) {
+        return member._id == memberId;
+    }) || null;
+};
+
+method.removeMember = function (memberId) {
+    var member = this.getMember(memberId);
+    if(member) {
+        this._members.splice(this._members.indexOf(member), 1);
+        return true;
+    }
+    return false;
+};
+
 method.isCommander = function (id) {
     return this._commander == id;
 };

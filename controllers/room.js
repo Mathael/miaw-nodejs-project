@@ -72,6 +72,29 @@ module.exports = {
         }
     },
 
+    expel: function (socket, memberId, global) {
+        if(!memberId) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action.'));
+            return;
+        }
+
+        var result = roomService.expelMember(socket.id, memberId);
+        if(!result) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action.'));
+            return;
+        }
+
+        // Notify to the expelled member that it was expelled
+        var memberSocket = global.clients.find(function (client) {
+            return client.id === memberId;
+        });
+
+        var room = roomService.findOneByCommander(socket.id);
+        if(memberSocket) memberSocket.leave(room._nsp, function () {
+            memberSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, new Response('info', roomService.rooms, 'Vous venez d\'être expulsé du salon.'));
+        });
+    },
+
     findAll: function (socket) {
         console.log('[ROOM Controller] retrieve all rooms.');
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);

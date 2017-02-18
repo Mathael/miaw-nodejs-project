@@ -38,9 +38,22 @@ module.exports = {
     },
 
     findOne: function (name) {
-        return this.rooms.find(function (r) {
-            return r._name == name
+        return this.rooms.find(function (room) {
+            return room._name == name
         });
+    },
+
+    findOneByCommander : function (commanderId) {
+        return this.rooms.find(function (room) {
+            return room._commander == commanderId;
+        });
+    },
+
+    expelMember: function (commanderId, memberId) {
+        var room = this.findOneByCommander(commanderId);
+        if(!room) return false;
+
+        return room.removeMember(memberId);
     },
 
     toggleLock: function (room_name, isLockRequest) {

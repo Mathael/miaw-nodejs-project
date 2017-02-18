@@ -29,7 +29,8 @@ module.exports = {
             DELETE : 'EVENT_ROOM_DELETE',
             UNLOCK : 'EVENT_ROOM_UNLOCK',
             LOCK : 'EVENT_ROOM_LOCK',
-            LEAVE : 'EVENT_ROOM_LEAVE'
+            LEAVE : 'EVENT_ROOM_LEAVE',
+            EXPEL : 'EVENT_ROOM_EXPEL'
         }
     }
 };

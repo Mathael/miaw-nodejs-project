@@ -12,7 +12,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         if(data.status !== 'success') sendAlert(data.status, data.message);
         if(data.payload && global.room) {
             global.room = data.payload;
-            console.log(global.room);
+            console.log('update event received', global.room);
+            pageManager.updateRoomData(global.room);
         }
     });
 

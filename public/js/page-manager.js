@@ -20,6 +20,30 @@ var pageManager = {
         );
     },
 
+    updateRoomData : function (room) {
+        console.log('updateRoomData', room);
+        if(!room) return;
+
+        // Update Room members list
+        var userList = $('#room-client-list');
+        userList.empty(); // clear all and draw again
+        room._members.forEach(function (member) {
+            var icon = $('<i>')
+                .addClass('fa fa-trash-o link')
+                .css('margin-right', '6px')
+                .on('click', function(){
+                    $('.room-member[data-id = "'+member._id+'"]').remove();
+                    application.expelMember(member._id);
+                });
+            $('<div>')
+                .attr('data-id', member._id)
+                .addClass('display-block room-member')
+                .append(icon)
+                .append(member._username)
+                .appendTo(userList);
+        });
+    },
+
     toggleRoomLockEvent: function(isLocked) {
         var btnLock = $('#toggleRoomLock');
         isLocked ? btnLock.text('Déverrouiller le salon') : btnLock.text('Verrouiller le salon');
