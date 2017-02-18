@@ -96,7 +96,6 @@ module.exports = {
     },
 
     findAll: function (socket) {
-        console.log('[ROOM Controller] retrieve all rooms.');
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_ALL, roomService.rooms);
     },
 

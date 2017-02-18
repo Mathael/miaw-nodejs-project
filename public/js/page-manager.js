@@ -76,7 +76,7 @@ var pageManager = {
             container.append(commander_name);
 
             container.on('click', function(){
-                application.joinRoom(v._name);
+                application.join(v._name);
             });
 
             room_list.append(container);

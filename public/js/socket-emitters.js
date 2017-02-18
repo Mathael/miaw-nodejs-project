@@ -19,7 +19,7 @@ var application = {
         } else sendAlert('error', 'Vous ne faites partie d\'aucun salon');
     },
 
-    joinRoom : function (name) {
+    join : function (name) {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.JOIN, name);
     },
 
