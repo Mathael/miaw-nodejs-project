@@ -1,7 +1,3 @@
-socket.on('event', function(data) {
-    console.log('Event received :', data);
-});
-
 socket.on('CON_STATE_SUCCESS', function(data) {
     sessionStorage.setItem('socketId', data.payload.id);
     APP_EVENTS = data.payload.events;
