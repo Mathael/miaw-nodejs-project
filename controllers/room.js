@@ -25,7 +25,7 @@ module.exports = {
         socket.emit(APP_EVENTS.COMMONS.FAIL);
     },
 
-    join: function (client, room_name, username) {
+    join: function (client, room_name, username, global) {
 
         // TODO: check username
 
@@ -50,7 +50,14 @@ module.exports = {
 
         client.join(room._nsp);
         client.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:false}, 'Bienvenue dans le salon ' + room_name));
-        client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
+        //client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
+
+        // Notify to the commander that a new User has joined the room.
+        var commander = global.clients.find(function (clientSocket) {
+            return clientSocket.id == room._commander;
+        });
+
+        if(commander) commander.emit(APP_EVENTS.TO_CLIENT.ROOM.UPDATE_DATA, new Response('success', room, null));
     },
 
     toggleLock: function (client, room_name, isLockRequest) {
@@ -82,7 +89,7 @@ module.exports = {
             return;
         }
 
-        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.INFORMATIONS, room);
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, room);
     },
 
     remove: function (socket, name, global) {
@@ -108,7 +115,7 @@ module.exports = {
             });
 
             if(memberSocket) memberSocket.leave(room._nsp, function () {
-                memberSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, new Response('warning', roomService.rooms, 'Le salon a été supprimé.'));
+                memberSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, new Response('info', roomService.rooms, 'Le salon a été supprimé.'));
             });
         });
 

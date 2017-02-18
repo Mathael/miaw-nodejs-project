@@ -8,8 +8,15 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayRooms(data);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.ROOM.INFORMATIONS, function (data) {
-        console.log(data);
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.UPDATE_DATA, function (data) {
+        if(data.status !== 'success') sendAlert(data.status, data.message);
+        if(data.payload && global.room) {
+            global.room = data.payload;
+            console.log(global.room);
+        }
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, function (data) {
         pageManager.displayMyRoom(data);
     });
 
@@ -24,7 +31,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
-                sendAlert('warning', response.message);
+                sendAlert('info', response.message);
             }
 
             global.room = response.payload.room;

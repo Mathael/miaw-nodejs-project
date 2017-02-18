@@ -41,7 +41,7 @@ module.exports = function (io,global) {
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
-            roomController.join(socket, room_name);
+            roomController.join(socket, room_name, 'NoName', global);
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, function (data) {

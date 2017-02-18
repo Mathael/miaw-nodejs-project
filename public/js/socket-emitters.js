@@ -28,5 +28,12 @@ var application = {
             var data = {room_name: global.room._name};
             global.room._isLocked ? socket.emit(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, data) : socket.emit(APP_EVENTS.TO_SERVER.ROOM.LOCK, data);
         }
+    },
+
+    showRoomMembers: function () {
+        if(global.room) {
+            //socket.emit(APP_EVENTS.TO_SERVER.ROOM.GET_MY_ROOM_INFORMATIONS)
+            //TODO
+        }
     }
 };

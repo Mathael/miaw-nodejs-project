@@ -20,7 +20,6 @@ var sendAlert = function (type, message) {
     var colors = {
         success: '#27ae60',
         error: '#ae3437',
-        warning: '#ae6800',
         info: '#02c0ff'
     };
     $.amaran({
