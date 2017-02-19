@@ -1,11 +1,12 @@
 var APP_EVENTS = require('../utils/events');
 var roomService = require('../services/room-service');
+var userService = require('../services/user-service');
 var Response = require('../models/response');
-var User = require('../models/user');
+
 module.exports = {
 
     create: function (socket, object) {
-        console.log('[RoomController] creating rooms.');
+        // TODO: switch commander to a normal object User() instead of socket identifier
 
         // Check if Objet required fields are defined
         if(!object.room_name || !object.questions) {
@@ -25,56 +26,71 @@ module.exports = {
         socket.emit(APP_EVENTS.COMMONS.FAIL);
     },
 
-    join: function (client, room_name, username, global) {
+    join: function (socket, room_name, username) {
 
         // TODO: check username
 
         var room = roomService.findOne(room_name);
+        var user = userService.findClientById(socket.id);
+        var userSocket = userService.getSocketClient(user._id);
+
+        if(!user) {
+            console.log('Non existing user is trying to join a room.');
+            return;
+        }
 
         if(!room) {
-            client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
+            return;
+        }
+
+        if(room.hasUser(user._id) || room._commander == user._id) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
             return;
         }
 
         if(room._isLocked) {
-            client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon est verrouillé'));
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon est verrouillé'));
             return;
         }
 
-        if(room.hasUser(client.id) || room._commander == client.id) {
-            client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
-            return;
-        }
+        room._members.push(user);
 
-        room._members.push(new User(client.id, username, null, ['ANONYMOUS']));
-
-        client.join(room._nsp);
-        client.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:false}, 'Bienvenue dans le salon ' + room_name));
+        userSocket.join(room._nsp);
+        userSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:false}, 'Bienvenue dans le salon ' + room_name));
         //client.broadcast.to(room._nsp).emit('event', 'New user joined the current room !');
 
         // Notify to the commander that a new User has joined the room.
-        var commander = global.clients.find(function (clientSocket) {
-            return clientSocket.id == room._commander;
-        });
-
+        var commander = userService.getSocketClient(room._commander);
         if(commander) commander.emit(APP_EVENTS.TO_CLIENT.ROOM.UPDATE_DATA, new Response('success', room, null));
     },
 
-    toggleLock: function (client, room_name, isLockRequest) {
+    toggleLock: function (socket, room_name, isLockRequest) {
         if(room_name) {
             // TODO: check if the client is the commander of the room
+            var room = roomService.findOne(room_name);
+            if(!room || room._commander != socket.id) {
+                socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action'));
+                return;
+            }
 
             var result = isLockRequest ? roomService.toggleLock(room_name, true) : roomService.toggleLock(room_name, false);
 
             result ?
-                client.emit(APP_EVENTS.TO_CLIENT.ROOM.LOCK_STATE, new Response('success', isLockRequest, null)) :
-                client.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action'));
+                socket.emit(APP_EVENTS.TO_CLIENT.ROOM.LOCK_STATE, new Response('success', isLockRequest, null)) :
+                socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action'));
         }
     },
 
-    expel: function (socket, memberId, global) {
+    expel: function (socket, memberId) {
+
         if(!memberId) {
             socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas effectuer cette action.'));
+            return;
+        }
+
+        if(memberId === socket.id) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne pouvez pas vous expulser vous même.'));
             return;
         }
 
@@ -85,12 +101,10 @@ module.exports = {
         }
 
         // Notify to the expelled member that it was expelled
-        var memberSocket = global.clients.find(function (client) {
-            return client.id === memberId;
-        });
-
+        var memberSocket = userService.getSocketClient(memberId);
         var room = roomService.findOneByCommander(socket.id);
-        if(memberSocket) memberSocket.leave(room._nsp, function () {
+
+        if(memberSocket && room) memberSocket.leave(room._nsp, function () {
             memberSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, new Response('info', roomService.rooms, 'Vous venez d\'être expulsé du salon.'));
         });
     },
@@ -100,11 +114,7 @@ module.exports = {
     },
 
     findRoomByMember : function (socket) {
-        var room = roomService.rooms.find(function (room) {
-            return room._members.find(function (member) {
-                return member._id == socket.id;
-            }) || room._commander == socket.id;
-        });
+        var room = roomService.findOneByMemberId(socket.id);
 
         if(room == null) {
             socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous ne faites partie d\'aucun salon'));
@@ -114,7 +124,7 @@ module.exports = {
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, room);
     },
 
-    remove: function (socket, name, global) {
+    remove: function (socket, name) {
         if(!name) return; // Invalid request, don't answer anythings
 
         var room = roomService.findOne(name);
@@ -132,9 +142,7 @@ module.exports = {
 
         // Expelling and notify all members
         room._members.forEach(function (member) {
-            var memberSocket = global.clients.find(function (client) {
-                return client.id === member._id;
-            });
+            var memberSocket = userService.getSocketClient(member._id);
 
             if(memberSocket) memberSocket.leave(room._nsp, function () {
                 memberSocket.emit(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, new Response('info', roomService.rooms, 'Le salon a été supprimé.'));

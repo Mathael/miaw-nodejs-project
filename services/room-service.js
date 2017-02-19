@@ -43,6 +43,14 @@ module.exports = {
         });
     },
 
+    findOneByMemberId: function (socketId) {
+        return this.rooms.find(function (room) {
+            return room._members.find(function (member) {
+                return member._id == socketId;
+            }) || room._commander == socketId;
+        });
+    },
+
     findOneByCommander : function (commanderId) {
         return this.rooms.find(function (room) {
             return room._commander == commanderId;
