@@ -1,23 +1,22 @@
 var APP_EVENTS = require('../utils/events');
 var Response = require('../models/response');
+var roomController = require('../controllers/room');
+var userService = require('../services/user-service');
 
-module.exports = function (io,global) {
+module.exports = function (io) {
 
     io.on('connection', function (socket) {
-        global.clients.push(socket);
-        console.log("[IO] Socket reçu : " + socket.id);
-        console.log('[IO] Connected clients : ' + global.clients.length);
-
-        var roomController = require('../controllers/room');
+        userService.addClient(socket);
+        console.log('[IO] Connected clients : ' + userService.getCount());
 
         // Send all availables events to front application
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
         socket.on('disconnect', function (data) {
-            global.clients.splice(global.clients.indexOf(data), 1);
+            userService.removeClient(data.id);
+            io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, userService.getCount());
             console.log('[IO] Client disconnected.');
-            io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, global.clients.length);
         });
 
         //////////////////////////////////////////////////
@@ -37,11 +36,11 @@ module.exports = function (io,global) {
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.DELETE, function (room_name) {
-            roomController.remove(socket, room_name, global);
+            roomController.remove(socket, room_name);
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
-            roomController.join(socket, room_name, 'NoName', global);
+            roomController.join(socket, room_name, 'NoName');
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, function (data) {
@@ -53,7 +52,7 @@ module.exports = function (io,global) {
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
-            roomController.expel(socket, memberId, global);
+            roomController.expel(socket, memberId);
         });
 
         //////////////////////////////////////////////////
@@ -73,6 +72,6 @@ module.exports = function (io,global) {
         //////////////////////////////////////////////////
 
         // Global broadcast on new client connect
-        io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, global.clients.length);
+        io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, userService.getCount());
     });
 };
