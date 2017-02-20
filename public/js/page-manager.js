@@ -61,6 +61,12 @@ var pageManager = {
             var room_name = $('<h3>');
             var commander_name = $('<p>');
             var size = $('<span>');
+            var join = $('<button>');
+            join.text("join room");
+            join.on('click',function () {
+                pageManager.displayJoinForm(v._name);
+
+            });
 
             container.addClass('room');
 
@@ -74,10 +80,7 @@ var pageManager = {
             room_name.append(size);
             container.append(room_name);
             container.append(commander_name);
-
-            container.on('click', function(){
-                application.join(v._name);
-            });
+            container.append(join);
 
             room_list.append(container);
         });
@@ -167,5 +170,160 @@ var pageManager = {
 
         global.questions = [];
         application.createRoom(myRoom);
+    },
+
+    displayJoinForm : function (data) {
+
+        var self = this;
+        var roomName = data;
+
+        requester('/room/joinRoom', null,
+            function (data) {
+                //self.clearBody();
+                $('#content').append(data);
+                var join = $('#join');
+                join.on('click',function () {
+                    var name = $('#name').val();
+                    if(name){
+                        application.joinRoom(roomName);
+                        self.insideRoom();
+                    }else{
+                        alert("merci de saisir un nom");
+                    }
+                })
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    insideRoom : function (data) {
+
+        var self = this;
+
+        requester('/room/insideRoom', null,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    showQuestion : function (data) {
+
+        var self = this;
+
+        requester('/room/showQuestion', data,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+
+            },
+            function() {
+                sendAlert('error', {
+                    message: 'Le serveur ne répond pas à votre requête'
+                });
+            });
+    },
+
+    profLaunchQCM: function() {
+        var self = this;
+        application.start(global.room._name);
+
+        var data = this.getMockData();
+
+        self.displayQuestion(data, 0);
+
+        // For the teacher: displays information about question, answers and current scores
+        self.displayTeacherInfo(data, 0);
+    },
+
+    displayTeacherInfo: function(data, current){
+        var self = this;
+        if(current == null) current = 0;
+
+        self.clearBody();
+        $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
+        $('#content').append('<h2>' + data[current].text + '</h2>');
+        var html = "<ul>";
+        for(var i in data[current].answers){
+            var answer = data[current].answers[i];
+            html += "<li";
+            if(answer.good) html += " class='good-answer' ";
+            html+=">" + answer.text + "</li>";
+        }
+        html += "</ul>";
+        $("#content").append(html);
+    },
+
+
+    displayQuestion: function (data, current) {
+        var self = this;
+
+        if(current == null) current = 0
+        data = this.getMockData();
+
+        self.clearBody();
+        $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
+        $('#content').append('<h2>' + data[current].text + '</h2>');
+        var html = "";
+        for(var i in data[current].answers){
+            var answer = data[current].answers[i];
+            html += "<input type='";
+            if(data[current].type == "single") html += "radio";
+            else if(data[current].type == "multiple") html += "checkbox";
+
+            html += "' name='question-" + parseInt(parseInt(current)+1) + "' value='" + answer.text + "' required /> " + answer.text + "<br />";
+        }
+
+        html += "<a onclick='pageManager.scoreSave()'>Valider</a>";
+
+        $("#content").append(html);
+    },
+
+    scoreSave: function(){
+        var reps = [];
+        $("input:checked").each(function(){
+            reps.push($(this).val());
+        });
+
+        this.clearBody();
+
+        $("#content").append("Votre réponse : " + reps);
+    },
+
+    //TODO: this function has testing purposes ; delete
+    getMockData: function(){
+        /* MOCK DATA: Room MCQ */
+        var mockQCM = [];
+        var question1 = new Question();
+        var question2 = new Question();
+        question1.text = "La question 1 !";
+        question2.text = "Une question 2 ?";
+        question2.type = "single";
+        question1.type = "multiple";
+
+        var answer = new Answer();
+        var answer2 = new Answer();
+        var answer3 = new Answer();
+        var answer4 = new Answer();
+        answer.text = "La bonne réponse !"; answer.good = true;
+        answer2.text = "Une mauvaise réponse !"; answer.good = false;
+        answer4.text = "Une autre mauvaise réponse !"; answer.good = false;
+        answer3.text = "Une bonne réponse !"; answer.good = true;
+
+        question1.answers = [answer, answer2, answer4];
+        question2.answers = [answer, answer3, answer2, answer4];
+        mockQCM.push(question1);
+        mockQCM.push(question2);
+
+        return mockQCM;
     }
 };

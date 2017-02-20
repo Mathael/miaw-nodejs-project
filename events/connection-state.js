@@ -9,7 +9,7 @@ module.exports = function (io) {
         userService.addClient(socket);
         console.log('[IO] Connected clients : ' + userService.getCount());
 
-        // Send all availables events to front application
+        // Send all available events to front application
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
