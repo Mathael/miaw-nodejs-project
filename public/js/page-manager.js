@@ -65,7 +65,6 @@ var pageManager = {
             join.text("join room");
             join.on('click',function () {
                 pageManager.displayJoinForm(v._name);
-
             });
 
             container.addClass('room');
@@ -82,7 +81,7 @@ var pageManager = {
             container.append(commander_name);
             container.append(join);
 
-            room_list.append(container);
+            room_list.append(join);
         });
 
         room_list.appendTo('#content');
@@ -261,25 +260,8 @@ var pageManager = {
         }
         html += "</ul>";
         $("#content").append(html);
-
-        $("#content").append("<a href='#' onclick='pageManager.nextQuestion(data, current)'>Question suivante</a> ");
-        $("#content").append("<a href='#'>Afficher le graphique</a> ");
-        $("#content").append("<a href='#'>Arrêter</a>");
-
     },
 
-    nextQuestion: function(data, current){
-        console.log("next!");
-        var self = this;
-        self.clearBody();
-
-        data = this.getMockData();
-
-        self.displayQuestion(data, parseInt(parseInt(current)+1));
-
-        // For the teacher: displays information about question, answers and current scores
-        self.displayTeacherInfo(data, parseInt(parseInt(current)+1));
-    },
 
     displayQuestion: function (data, current) {
         var self = this;
@@ -306,14 +288,14 @@ var pageManager = {
     },
 
     scoreSave: function(){
-        var answers = [];
+        var reps = [];
         $("input:checked").each(function(){
-            answers.push($(this).val());
+            reps.push($(this).val());
         });
 
         this.clearBody();
 
-        $("#content").append("Vous avez répondu : " + answers);
+        $("#content").append("Votre réponse : " + reps);
     },
 
     //TODO: this function has testing purposes ; delete
