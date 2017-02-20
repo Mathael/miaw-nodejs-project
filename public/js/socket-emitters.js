@@ -23,6 +23,11 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.JOIN, name);
     },
 
+    start : function (name) {
+        console.log('emitting in start() with event name ' + APP_EVENTS.TO_SERVER.PROF.START);
+        socket.emit(APP_EVENTS.TO_SERVER.PROF.START, name);
+    },
+
     toggleRoomLock : function() {
         if(global.room) {
             var data = {room_name: global.room._name};

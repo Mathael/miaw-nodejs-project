@@ -62,6 +62,7 @@ var pageManager = {
             var commander_name = $('<p>');
             var size = $('<span>');
             var join = $('<button>');
+
             join.text("join room");
             join.on('click',function () {
                 pageManager.displayJoinForm(v._name);
@@ -81,7 +82,7 @@ var pageManager = {
             container.append(commander_name);
             container.append(join);
 
-            room_list.append(join);
+            room_list.append(container);
         });
 
         room_list.appendTo('#content');
@@ -171,48 +172,35 @@ var pageManager = {
         application.createRoom(myRoom);
     },
 
-    displayJoinForm : function (data) {
+    displayJoinForm : function (roomName) {
+        this.clearBody();
 
-        var self = this;
-        var roomName = data;
-
-        requester('/room/joinRoom', null,
-            function (data) {
-                //self.clearBody();
-                $('#content').append(data);
-                var join = $('#join');
-                join.on('click',function () {
-                    var name = $('#name').val();
-                    if(name){
-                        application.joinRoom(roomName);
-                        self.insideRoom();
-                    }else{
-                        alert("merci de saisir un nom");
-                    }
-                })
-            },
-            function() {
-                sendAlert('error', {
-                    message: 'Le serveur ne répond pas à votre requête'
-                });
+        var form = $('<form>');
+        var label = $('<label>').text('Nom d\'utilisateur');
+        var input = $('<input>').attr({type: 'text', id:'username'});
+        var button = $('<button>')
+            .attr({type:'button'})
+            .text('Entrer dans le salon')
+            .on('click', function () {
+                var name = $(input).val();
+                if(name && name.length > 1){
+                    application.join(roomName);
+                }
             });
+
+        form
+            .append(label)
+            .append(input)
+            .append(button)
+            .appendTo('#content');
     },
 
-    insideRoom : function (data) {
+    insideRoom : function () {
+        this.clearBody();
 
-        var self = this;
-
-        requester('/room/insideRoom', null,
-            function (data) {
-                self.clearBody();
-                $('#content').append(data);
-
-            },
-            function() {
-                sendAlert('error', {
-                    message: 'Le serveur ne répond pas à votre requête'
-                });
-            });
+        $('#content').append(
+            $('<p>').text('Bienvenue dans le salon. Veuillez patienter...')
+        );
     },
 
     showQuestion : function (data) {
@@ -244,49 +232,52 @@ var pageManager = {
         self.displayTeacherInfo(data, 0);
     },
 
-    displayTeacherInfo: function(data, current){
-        var self = this;
+    displayTeacherInfo: function(questions, current){
+        this.clearBody();
+
+        if(questions == null) return;
+
         if(current == null) current = 0;
 
-        self.clearBody();
-        $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
-        $('#content').append('<h2>' + data[current].text + '</h2>');
-        var html = "<ul>";
-        for(var i in data[current].answers){
-            var answer = data[current].answers[i];
-            html += "<li";
-            if(answer.good) html += " class='good-answer' ";
-            html+=">" + answer.text + "</li>";
-        }
-        html += "</ul>";
-        $("#content").append(html);
+        if(questions[current].answers == null) return;
 
-        $("#content").append("<a href='#' onclick='pageManager.nextQuestion(data, current)'>Question suivante</a> ");
-        $("#content").append("<a href='#'>Afficher le graphique</a> ");
-        $("#content").append("<a href='#'>Arrêter</a>");
+        var content = $('#content');
+
+        content.append('<h1>Question ' + (parseInt(current)+1) + '</h1>');
+        content.append('<h2>' + questions[current].text + '</h2>');
+
+        var list = $('<ul>');
+        for(var index in questions[current].answers) {
+            var answer = questions[current].answers[index];
+            var li = $('<li>').addClass('good-answer').text(answer.text);
+            list.append(li);
+        }
+
+        content.append(list);
+        $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
+        content.append("<a href='#'>Afficher le graphique</a>");
+        content.append("<a href='#'>Arrêter</a>");
 
     },
 
     nextQuestion: function(data, current){
         console.log("next!");
-        var self = this;
-        self.clearBody();
+        this.clearBody();
 
         data = this.getMockData();
 
-        self.displayQuestion(data, parseInt(parseInt(current)+1));
+        this.displayQuestion(data, (parseInt(current)+1));
 
         // For the teacher: displays information about question, answers and current scores
-        self.displayTeacherInfo(data, parseInt(parseInt(current)+1));
+        this.displayTeacherInfo(data, (parseInt(current)+1));
     },
 
     displayQuestion: function (data, current) {
-        var self = this;
+        this.clearBody();
 
-        if(current == null) current = 0
+        if(current == null) current = 0;
         data = this.getMockData();
 
-        self.clearBody();
         $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
         $('#content').append('<h2>' + data[current].text + '</h2>');
         var html = "";
@@ -296,7 +287,7 @@ var pageManager = {
             if(data[current].type == "single") html += "radio";
             else if(data[current].type == "multiple") html += "checkbox";
 
-            html += "' name='question-" + parseInt(parseInt(current)+1) + "' value='" + answer.text + "' required /> " + answer.text + "<br />";
+            html += "' name='question-" + (parseInt(current)+1) + "' value='" + answer.text + "' required /> " + answer.text + "<br />";
         }
 
         html += "<a onclick='pageManager.scoreSave()'>Valider</a>";

@@ -42,10 +42,11 @@ socket.on('CON_STATE_SUCCESS', function(data) {
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
                 sendAlert('info', response.message);
+                global.room = response.payload.room;
+                pageManager.displayMyRoom(response.payload.room);
+            }else {
+                pageManager.insideRoom();
             }
-
-            global.room = response.payload.room;
-            pageManager.displayMyRoom(response.payload.room);
         }
     });
 

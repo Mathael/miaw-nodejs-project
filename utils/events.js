@@ -18,6 +18,12 @@ module.exports = {
             LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
             LEAVE : 'EVENT_ROOM_LEAVE',
             UPDATE_DATA : 'UPDATE_DATA'
+        },
+        PROF :{
+            START : 'EVENT_PROF_START',
+            STOP :'EVENT_PROF_STOP',
+            SHOWSTAT : 'EVENT_PROF_STAT',
+            NEXT : 'EVENT_PROF_NEXT'
         }
     },
     TO_SERVER : {
@@ -31,6 +37,12 @@ module.exports = {
             LOCK : 'EVENT_ROOM_LOCK',
             LEAVE : 'EVENT_ROOM_LEAVE',
             EXPEL : 'EVENT_ROOM_EXPEL'
+        },
+        PROF :{
+            START : 'EVENT_PROF_START',
+            STOP :'EVENT_PROF_STOP',
+            SHOWSTAT : 'EVENT_PROF_STAT',
+            NEXT : 'EVENT_PROF_NEXT'
         }
     }
 };
