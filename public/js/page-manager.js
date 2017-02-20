@@ -260,8 +260,25 @@ var pageManager = {
         }
         html += "</ul>";
         $("#content").append(html);
+
+        $("#content").append("<a href='#' onclick='pageManager.nextQuestion(data, current)'>Question suivante</a> ");
+        $("#content").append("<a href='#'>Afficher le graphique</a> ");
+        $("#content").append("<a href='#'>Arrêter</a>");
+
     },
 
+    nextQuestion: function(data, current){
+        console.log("next!");
+        var self = this;
+        self.clearBody();
+
+        data = this.getMockData();
+
+        self.displayQuestion(data, parseInt(parseInt(current)+1));
+
+        // For the teacher: displays information about question, answers and current scores
+        self.displayTeacherInfo(data, parseInt(parseInt(current)+1));
+    },
 
     displayQuestion: function (data, current) {
         var self = this;
@@ -288,14 +305,14 @@ var pageManager = {
     },
 
     scoreSave: function(){
-        var reps = [];
+        var answers = [];
         $("input:checked").each(function(){
-            reps.push($(this).val());
+            answers.push($(this).val());
         });
 
         this.clearBody();
 
-        $("#content").append("Votre réponse : " + reps);
+        $("#content").append("Vous avez répondu : " + answers);
     },
 
     //TODO: this function has testing purposes ; delete
