@@ -37,7 +37,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
         if(response.payload != null) {
             // Display join success
-            if(response.status && response.message) sendAlert(response.status, response.message);
+            if (response.status && response.message) sendAlert(response.status, response.message);
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {

@@ -58,6 +58,13 @@ module.exports = function (io) {
         //////////////////////////////////////////////////
         ///                 USER EVENTS                ///
         //////////////////////////////////////////////////
+        socket.on(APP_EVENTS.TO_SERVER.PROF.START, function (room_name) {
+            roomController.start(this,room_name);
+        });
+
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
+            roomController.nextQuestion(this,name,id_question);
+        });
 
         //////////////////////////////////////////////////
         ///               QUESTION EVENTS              ///
