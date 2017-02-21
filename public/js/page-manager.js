@@ -274,9 +274,30 @@ var pageManager = {
 
         content.append(list);
         $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#'>Afficher le graphique</a>");
+        content.append("<a href='#'>Afficher le graphique</a>")on('click', function(){pageManager.displayChart(current)});
         content.append("<a href='#'>Arrêter</a>");
+    },
 
+    displayChart: function(current){
+        this.clearBody();
+
+        var data = this.getMockData();
+
+        $("#content").append("<h1>" + data[current].text + "</h1>");
+        $("#content").append("<select name='chart_type' id='chart_type'><option value='bar'>Graphique en barres</option><option value='pie'>Graphique en secteurs</option></select><br />");
+        $("#content").append("<div id='chart-container'><canvas id='myChart' width='100' height='300'></canvas></div>");
+
+        var cData = [];
+        var cLabels = [];
+
+        for(var i in data[current].answers){
+            cLabels.push(data[current].answers[i].text);
+            //TODO : Real scole for this answer instead of i
+            // score.getScoreOfAnswer(data[current].answers[i])
+            cData.push(i);
+        }
+        setBarChart(cLabels, cData);
+        // $("#content").append("<script src='/public/js/chartView.js'></script>");
     },
 
     nextQuestion: function(data, current){

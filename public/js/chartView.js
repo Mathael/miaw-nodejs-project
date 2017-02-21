@@ -1,18 +1,24 @@
-jQuery(document).ready(function () {
-    setBarChart();
+var labels = null;
+var data = null;
 
-    jQuery("select[name='chart_type']").on('change', function(){
+jQuery(document).ready(function () {
+    //TODO: Listener cassé
+    jQuery("select#chart_type").on('change', function(){
         if(jQuery(this).val() == "bar"){
-            setBarChart();
+            setBarChart(labels, data);
         }else{
-            setPieChart();
+            setPieChart(labels, data);
         }
     });
 });
 
-function setBarChart(){
+function setBarChart(cLabels, cData){
     jQuery("#myChart").remove();
     jQuery("#chart-container").append('<canvas id="myChart" width="100" height="200"></canvas>');
+
+    labels = cLabels;
+    data = cData;
+
 
     var ctx = jQuery("#myChart");
     var myChart = new Chart(ctx, {
