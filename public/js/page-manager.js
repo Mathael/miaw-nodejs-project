@@ -205,19 +205,35 @@ var pageManager = {
 
     showQuestion : function (data) {
 
-        var self = this;
+        var question = data;
 
-        requester('/room/showQuestion', data,
-            function (data) {
-                self.clearBody();
-                $('#content').append(data);
+        this.clearBody();
 
-            },
-            function() {
-                sendAlert('error', {
-                    message: 'Le serveur ne répond pas à votre requête'
-                });
-            });
+        var content = $('#content');
+
+        content.append('<h3>Question : '+question.text+'</h3>');
+
+        var typeInput;
+        //checkbox
+        if(question.type=="multiple") {
+            typeInput="radio";
+        }//Radio button
+        else{
+            typeInput="checkbox";
+        }
+
+        content.append('<h3>Reponses : </h3>');
+        var listAnswers = $('<ul>');
+        for(var i in question.answers) {
+
+            var li = $('<li>').appendTo(listAnswers);
+
+            var input = $('<input>').attr('type',typeInput).val(i).appendTo(li);
+            var span = $('<span>').html(question.answers[i].text).appendTo(li);
+        }
+        content.append(listAnswers);
+
+
     },
 
     profLaunchQCM: function() {
@@ -230,6 +246,9 @@ var pageManager = {
 
         // For the teacher: displays information about question, answers and current scores
         self.displayTeacherInfo(data, 0);
+
+        //First question for student
+        application.nextQuestionEtu(global.room._name,data[0]);
     },
 
     displayTeacherInfo: function(questions, current){
@@ -270,6 +289,7 @@ var pageManager = {
 
         // For the teacher: displays information about question, answers and current scores
         this.displayTeacherInfo(data, (parseInt(current)+1));
+        application.nextQuestionEtu(global.room._name,data[parseInt(current)+1]);
     },
 
     displayQuestion: function (data, current) {

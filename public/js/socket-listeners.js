@@ -26,8 +26,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data) {
-        var id = "id="+data;
-        pageManager.showQuestion(id);
+        pageManager.showQuestion(data);
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {

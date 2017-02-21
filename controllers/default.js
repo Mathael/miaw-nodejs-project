@@ -65,10 +65,5 @@ module.exports = function (app,io) {
         res.render('rooms/insideRoom.ejs')
     });
 
-    app.get('/room/showQuestion', function (req, res) {
-        var id = req.query.id;
-        res.render('rooms/question.ejs',{ question : id})
-    });
-
     console.log('Default controller loaded successful');
 };

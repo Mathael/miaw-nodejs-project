@@ -38,5 +38,12 @@ var application = {
     expelMember : function (id) {
         if(!id) return;
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.EXPEL, id);
+    },
+
+    nextQuestionEtu : function (name,question) {
+        socket.emit(APP_EVENTS.TO_SERVER.PROF.NEXT,name,question);
+
     }
+
+
 };

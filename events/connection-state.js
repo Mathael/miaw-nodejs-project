@@ -51,6 +51,10 @@ module.exports = function (io) {
             roomController.toggleLock(socket, data.room_name, true);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (room_name,question) {
+            roomController.nextQuestion(socket,room_name,question);
+        });
+
         socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
             roomController.expel(socket, memberId);
         });
