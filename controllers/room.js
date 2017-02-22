@@ -2,6 +2,7 @@ var APP_EVENTS = require('../utils/events');
 var roomService = require('../services/room-service');
 var userService = require('../services/user-service');
 var Response = require('../models/response');
+var database = require('../utils/database');
 
 module.exports = {
 
@@ -48,7 +49,37 @@ module.exports = {
             return;
         }
 
-        socket.broadcast.to(room._nsp).emit(APP_EVENTS.TO_CLIENT.PROF.NEXT,question);
+        socket.broadcast.to(room._nsp).emit(APP_EVENTS.TO_CLIENT.PROF.NEXT,question,room_name);
+
+    },
+
+    insertAnswer : function (socket,room_name,answers) {
+
+        var user = userService.findClientById(socket.id);
+        var room = roomService.findOne(room_name);
+        var userSocket = userService.getSocketClient(user._id);
+        if(!user) {
+            console.log('Non existing user is trying to send answer.');
+            return;
+        }
+        if(!room) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
+            return;
+        }
+
+        if(room.hasUser(user._id)){
+
+            for(var i =0; i<answers.length;i++) {
+                database.executeQuery('INSERT INTO score (user,answer,room) VALUES ("' + user._username + '","'+answers[i]+'","'+room_name+'")', function (rows, fields) {
+
+                });
+            }
+
+            userSocket.emit(APP_EVENTS.TO_CLIENT.STUDENT.WAITNEXT, new Response('success', null, 'Votre vote a été pris en compte'));
+
+        }else{
+            console.log("Vous ne pouvez pas répondre si vous n'etes pas dans la room");
+        }
 
     },
 

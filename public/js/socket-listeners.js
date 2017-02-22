@@ -25,8 +25,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayQuestion(data);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data) {
-        pageManager.showQuestion(data);
+    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data,room_name) {
+        pageManager.showQuestion(data,room_name);
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
@@ -59,6 +59,11 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, function (response) {
         sendAlert(response.status, response.message);
         pageManager.displayRooms(response.payload);
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.STUDENT.WAITNEXT, function (response) {
+        sendAlert(response.status, response.message);
+        pageManager.waitNextQuestion();
     });
 
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {

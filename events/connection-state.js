@@ -78,6 +78,10 @@ module.exports = function (io) {
         ///                ANSWER EVENTS               ///
         //////////////////////////////////////////////////
 
+        socket.on(APP_EVENTS.TO_SERVER.STUDENT.SENDANSWER, function (room_name,answers) {
+            roomController.insertAnswer(socket,room_name,answers);
+        });
+
         //////////////////////////////////////////////////
         ///                GLOBAL EVENTS               ///
         //////////////////////////////////////////////////

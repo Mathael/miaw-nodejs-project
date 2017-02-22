@@ -43,5 +43,9 @@ var application = {
     nextQuestionEtu : function (name,question) {
         socket.emit(APP_EVENTS.TO_SERVER.PROF.NEXT,name,question);
 
+    },
+
+    sendAnswer : function (room_name,answer) {
+        socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SENDANSWER,room_name,answer);
     }
 };
