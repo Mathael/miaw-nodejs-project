@@ -101,10 +101,8 @@ var pageManager = {
         new_room_form.appendTo('#content');
     },
 
-    displayRoomCreation : function (data) {
-        console.log('displayRoomCreation()', data);
+    displayRoomCreation : function () {
         var self = this;
-
         requester('/room/create', null,
             function (data) {
                 self.clearBody();
@@ -232,8 +230,6 @@ var pageManager = {
             var span = $('<span>').html(question.answers[i].text).appendTo(li);
         }
         content.append(listAnswers);
-
-
     },
 
     profLaunchQCM: function() {
@@ -274,7 +270,7 @@ var pageManager = {
 
         content.append(list);
         $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#'>Afficher le graphique</a>")on('click', function(){pageManager.displayChart(current)});
+        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current)});
         content.append("<a href='#'>Arrêter</a>");
     },
 
@@ -282,10 +278,11 @@ var pageManager = {
         this.clearBody();
 
         var data = this.getMockData();
+        var content = $("#content");
 
-        $("#content").append("<h1>" + data[current].text + "</h1>");
-        $("#content").append("<select name='chart_type' id='chart_type'><option value='bar'>Graphique en barres</option><option value='pie'>Graphique en secteurs</option></select><br />");
-        $("#content").append("<div id='chart-container'><canvas id='myChart' width='100' height='300'></canvas></div>");
+        content.append("<h1>" + data[current].text + "</h1>");
+        content.append("<select name='chart_type' id='chart_type'><option value='bar'>Graphique en barres</option><option value='pie'>Graphique en secteurs</option></select><br />");
+        content.append("<div id='chart-container'><canvas id='myChart' width='100' height='300'></canvas></div>");
 
         var cData = [];
         var cLabels = [];
@@ -297,7 +294,6 @@ var pageManager = {
             cData.push(i);
         }
         setBarChart(cLabels, cData);
-        // $("#content").append("<script src='/public/js/chartView.js'></script>");
     },
 
     nextQuestion: function(data, current){

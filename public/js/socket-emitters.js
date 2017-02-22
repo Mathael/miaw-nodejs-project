@@ -44,6 +44,4 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.PROF.NEXT,name,question);
 
     }
-
-
 };
