@@ -9,7 +9,7 @@ module.exports = function (io) {
         userService.addClient(socket);
         console.log('[IO] Connected clients : ' + userService.getCount());
 
-        // Send all availables events to front application
+        // Send all available events to front application
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
@@ -51,6 +51,10 @@ module.exports = function (io) {
             roomController.toggleLock(socket, data.room_name, true);
         });
 
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (room_name,question) {
+            roomController.nextQuestion(socket,room_name,question);
+        });
+
         socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
             roomController.expel(socket, memberId);
         });
@@ -58,6 +62,13 @@ module.exports = function (io) {
         //////////////////////////////////////////////////
         ///                 USER EVENTS                ///
         //////////////////////////////////////////////////
+        socket.on(APP_EVENTS.TO_SERVER.PROF.START, function (room_name) {
+            roomController.start(this,room_name);
+        });
+
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
+            roomController.nextQuestion(this,name,id_question);
+        });
 
         //////////////////////////////////////////////////
         ///               QUESTION EVENTS              ///

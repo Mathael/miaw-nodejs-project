@@ -21,6 +21,14 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayMyRoom(data);
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
+        pageManager.displayQuestion(data);
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data) {
+        pageManager.showQuestion(data);
+    });
+
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
         $('#client-count-value').text(data);
     });
@@ -28,15 +36,16 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, function (response) {
         if(response.payload != null) {
             // Display join success
-            if(response.status && response.message) sendAlert(response.status, response.message);
+            if (response.status && response.message) sendAlert(response.status, response.message);
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
                 sendAlert('info', response.message);
+                global.room = response.payload.room;
+                pageManager.displayMyRoom(response.payload.room);
+            }else {
+                pageManager.insideRoom();
             }
-
-            global.room = response.payload.room;
-            pageManager.displayMyRoom(response.payload.room);
         }
     });
 

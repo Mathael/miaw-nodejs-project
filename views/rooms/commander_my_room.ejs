@@ -4,18 +4,19 @@
                 <section id="current_question">
                     <p>Vous devez démarrer le questionnaire.</p>
                 </section>
-                <section id="curret_answers">
+                <section id="current_answers">
                     <p>Une fois le questionnaire démarré, vous pourrez voir les réponses possibles de la question en cours.</p>
                 </section>
             </section>
             <section class="display-inline-block float-right">
                 <h3>Utilisateurs connectés au salon</h3>
-                <div id="room-client-list">
-                    <a href="#" class="link display-block" onclick="application.expelMember(null)"><i class="fa fa-trash-o"></i> LEBOC Philippe (Démo)</a>
-                </div>
+                <div id="room-client-list"></div>
             </section>
             <section>
-                <a href="#">Démarrer la session</a>
+                <h2>Rappel des questions avant le début du test</h2>
+            </section>
+            <section id="room-navigation">
+                <a href="#" onclick="pageManager.profLaunchQCM()">Démarrer</a>
             </section>
             <section>
                 <a id="toggleRoomLock" href="#" onclick="application.toggleRoomLock()"></a>

@@ -57,5 +57,13 @@ module.exports = function (app,io) {
         res.render('rooms/commander_my_room.ejs');
     });
 
+    app.get('/room/joinRoom', function (req, res) {
+        res.render('rooms/joinRoom.ejs')
+    });
+
+    app.get('/room/insideRoom', function (req, res) {
+        res.render('rooms/insideRoom.ejs')
+    });
+
     console.log('Default controller loaded successful');
 };

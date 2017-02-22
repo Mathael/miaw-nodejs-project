@@ -61,6 +61,12 @@ var pageManager = {
             var room_name = $('<h3>');
             var commander_name = $('<p>');
             var size = $('<span>');
+            var join = $('<button>');
+
+            join.text("join room");
+            join.on('click',function () {
+                pageManager.displayJoinForm(v._name);
+            });
 
             container.addClass('room');
 
@@ -74,10 +80,7 @@ var pageManager = {
             room_name.append(size);
             container.append(room_name);
             container.append(commander_name);
-
-            container.on('click', function(){
-                application.join(v._name);
-            });
+            container.append(join);
 
             room_list.append(container);
         });
@@ -98,10 +101,8 @@ var pageManager = {
         new_room_form.appendTo('#content');
     },
 
-    displayRoomCreation : function (data) {
-        console.log('displayRoomCreation()', data);
+    displayRoomCreation : function () {
         var self = this;
-
         requester('/room/create', null,
             function (data) {
                 self.clearBody();
@@ -167,5 +168,206 @@ var pageManager = {
 
         global.questions = [];
         application.createRoom(myRoom);
+    },
+
+    displayJoinForm : function (roomName) {
+        this.clearBody();
+
+        var form = $('<form>');
+        var label = $('<label>').text('Nom d\'utilisateur');
+        var input = $('<input>').attr({type: 'text', id:'username'});
+        var button = $('<button>')
+            .attr({type:'button'})
+            .text('Entrer dans le salon')
+            .on('click', function () {
+                var name = $(input).val();
+                if(name && name.length > 1){
+                    application.join(roomName);
+                }
+            });
+
+        form
+            .append(label)
+            .append(input)
+            .append(button)
+            .appendTo('#content');
+    },
+
+    insideRoom : function () {
+        this.clearBody();
+
+        $('#content').append(
+            $('<p>').text('Bienvenue dans le salon. Veuillez patienter...')
+        );
+    },
+
+    showQuestion : function (data) {
+
+        var question = data;
+
+        this.clearBody();
+
+        var content = $('#content');
+
+        content.append('<h3>Question : '+question.text+'</h3>');
+
+        var typeInput;
+        //checkbox
+        if(question.type=="multiple") {
+            typeInput="radio";
+        }//Radio button
+        else{
+            typeInput="checkbox";
+        }
+
+        content.append('<h3>Reponses : </h3>');
+        var listAnswers = $('<ul>');
+        for(var i in question.answers) {
+
+            var li = $('<li>').appendTo(listAnswers);
+
+            var input = $('<input>').attr('type',typeInput).val(i).appendTo(li);
+            var span = $('<span>').html(question.answers[i].text).appendTo(li);
+        }
+        content.append(listAnswers);
+    },
+
+    profLaunchQCM: function() {
+        var self = this;
+        application.start(global.room._name);
+
+        var data = this.getMockData();
+
+        self.displayQuestion(data, 0);
+
+        // For the teacher: displays information about question, answers and current scores
+        self.displayTeacherInfo(data, 0);
+
+        //First question for student
+        application.nextQuestionEtu(global.room._name,data[0]);
+    },
+
+    displayTeacherInfo: function(questions, current){
+        this.clearBody();
+
+        if(questions == null) return;
+
+        if(current == null) current = 0;
+
+        if(questions[current].answers == null) return;
+
+        var content = $('#content');
+
+        content.append('<h1>Question ' + (parseInt(current)+1) + '</h1>');
+        content.append('<h2>' + questions[current].text + '</h2>');
+
+        var list = $('<ul>');
+        for(var index in questions[current].answers) {
+            var answer = questions[current].answers[index];
+            var li = $('<li>').addClass('good-answer').text(answer.text);
+            list.append(li);
+        }
+
+        content.append(list);
+        $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
+        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current)});
+        content.append("<a href='#'>Arrêter</a>");
+    },
+
+    displayChart: function(current){
+        this.clearBody();
+
+        var data = this.getMockData();
+        var content = $("#content");
+
+        content.append("<h1>" + data[current].text + "</h1>");
+        content.append("<select name='chart_type' id='chart_type'><option value='bar'>Graphique en barres</option><option value='pie'>Graphique en secteurs</option></select><br />");
+        content.append("<div id='chart-container'><canvas id='myChart' width='100' height='300'></canvas></div>");
+
+        var cData = [];
+        var cLabels = [];
+
+        for(var i in data[current].answers){
+            cLabels.push(data[current].answers[i].text);
+            //TODO : Real scole for this answer instead of i
+            // score.getScoreOfAnswer(data[current].answers[i])
+            cData.push(i);
+        }
+        setBarChart(cLabels, cData);
+    },
+
+    nextQuestion: function(data, current){
+        console.log("next!");
+        this.clearBody();
+
+        data = this.getMockData();
+
+        this.displayQuestion(data, (parseInt(current)+1));
+
+        // For the teacher: displays information about question, answers and current scores
+        this.displayTeacherInfo(data, (parseInt(current)+1));
+        application.nextQuestionEtu(global.room._name,data[parseInt(current)+1]);
+    },
+
+    displayQuestion: function (data, current) {
+        this.clearBody();
+
+        if(current == null) current = 0;
+        data = this.getMockData();
+
+        $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
+        $('#content').append('<h2>' + data[current].text + '</h2>');
+        var html = "";
+        for(var i in data[current].answers){
+            var answer = data[current].answers[i];
+            html += "<input type='";
+            if(data[current].type == "single") html += "radio";
+            else if(data[current].type == "multiple") html += "checkbox";
+
+            html += "' name='question-" + (parseInt(current)+1) + "' value='" + answer.text + "' required /> " + answer.text + "<br />";
+        }
+
+        html += "<a onclick='pageManager.scoreSave()'>Valider</a>";
+
+        $("#content").append(html);
+    },
+
+    scoreSave: function(){
+        var answers = [];
+        $("input:checked").each(function(){
+            answers.push($(this).val());
+        });
+
+        this.clearBody();
+
+        $("#content").append("Vous avez répondu : " + answers);
+    },
+
+    //TODO: this function has testing purposes ; delete
+    getMockData: function(){
+        /* MOCK DATA: Room MCQ */
+        var mockQCM = [];
+        var question1 = new Question();
+        var question2 = new Question();
+        question1.text = "La question 1 !";
+        question2.text = "Une question 2 ?";
+        question2.type = "single";
+        question1.type = "multiple";
+
+        var answer = new Answer();
+        var answer2 = new Answer();
+        var answer3 = new Answer();
+        var answer4 = new Answer();
+        answer.text = "La bonne réponse !"; answer.good = true;
+        answer2.text = "Une mauvaise réponse !"; answer.good = false;
+        answer4.text = "Une autre mauvaise réponse !"; answer.good = false;
+        answer3.text = "Une bonne réponse !"; answer.good = true;
+
+        question1.answers = [answer, answer2, answer4];
+        question2.answers = [answer, answer3, answer2, answer4];
+        mockQCM.push(question1);
+        mockQCM.push(question2);
+
+        return mockQCM;
     }
 };

@@ -26,6 +26,32 @@ module.exports = {
         socket.emit(APP_EVENTS.COMMONS.FAIL);
     },
 
+    start : function (socket,room_name) {
+
+        var room = roomService.findOne(room_name);
+
+        if(!room) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
+            return;
+        }
+
+        socket.broadcast.to(room._nsp).emit(APP_EVENTS.TO_CLIENT.PROF.START);
+    },
+
+    nextQuestion : function (socket,room_name,question) {
+
+        var room = roomService.findOne(room_name);
+
+
+        if(!room) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
+            return;
+        }
+
+        socket.broadcast.to(room._nsp).emit(APP_EVENTS.TO_CLIENT.PROF.NEXT,question);
+
+    },
+
     join: function (socket, room_name, username) {
 
         // TODO: check username
