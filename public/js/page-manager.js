@@ -31,7 +31,6 @@ var pageManager = {
     },
 
     updateRoomData : function (room) {
-        console.log('updateRoomData', room);
         if(!room) return;
 
         // Update Room members list
