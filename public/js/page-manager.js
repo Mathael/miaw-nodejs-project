@@ -233,15 +233,14 @@ var pageManager = {
     },
 
     profLaunchQCM: function() {
-        var self = this;
         application.start(global.room._name);
 
         var data = this.getMockData();
 
-        self.displayQuestion(data, 0);
+        //this.displayQuestion(data, 0);
 
         // For the teacher: displays information about question, answers and current scores
-        self.displayTeacherInfo(data, 0);
+        this.displayTeacherInfo(data, 0);
 
         //First question for student
         application.nextQuestionEtu(global.room._name,data[0]);
@@ -270,7 +269,7 @@ var pageManager = {
 
         content.append(list);
         $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current)});
+        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current);});
         content.append("<a href='#'>Arrêter</a>");
     },
 
