@@ -9,7 +9,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.UPDATE_DATA, function (data) {
-        if(data.status !== 'success') sendAlert(data.status, data.message);
+        if(data.message) sendAlert(data.status, data.message);
         if(data.payload && global.room) {
             global.room = data.payload;
             console.log('update event received', global.room);
@@ -40,7 +40,6 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
-                sendAlert('info', response.message);
                 global.room = response.payload.room;
                 pageManager.displayMyRoom(response.payload.room);
             }else {

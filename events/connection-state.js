@@ -13,8 +13,8 @@ module.exports = function (io) {
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
-        socket.on('disconnect', function (data) {
-            userService.removeClient(data.id);
+        socket.on('disconnect', function () {
+            userService.removeClient(socket.id);
             io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, userService.getCount());
             console.log('[IO] Client disconnected.');
         });
