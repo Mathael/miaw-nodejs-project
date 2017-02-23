@@ -14,7 +14,7 @@ var pageManager = {
 
     },
 
-    displayMyRoom : function (room) {
+    displayRoomForTeacher : function (room) {
         if(!room) return;
 
         this.clearBody();

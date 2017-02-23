@@ -192,7 +192,9 @@ module.exports = {
             return;
         }
 
-        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, room);
+        var isCommander = room._commander == socket.id;
+        var data = {isCommander:isCommander, room:room};
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, new Response('success', data, null));
     },
 
     remove: function (socket, name) {

@@ -18,7 +18,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, function (data) {
-        pageManager.displayMyRoom(data);
+        if(!data) sendAlert('error', 'Réponse inattendue de la part du serveur.');
+        data.payload.isCommander ? pageManager.displayRoomForTeacher(data.payload) : pageManager.insideRoom();
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
@@ -41,7 +42,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
                 global.room = response.payload.room;
-                pageManager.displayMyRoom(response.payload.room);
+                pageManager.displayRoomForTeacher(response.payload.room);
             }else {
                 pageManager.insideRoom();
             }
