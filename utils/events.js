@@ -17,7 +17,10 @@ module.exports = {
             GET_MY_ROOM_INFORMATIONS : 'GET_MY_ROOM_INFORMATIONS',
             LOCK_STATE : 'EVENT_ROOM_LOCK_STATE',
             LEAVE : 'EVENT_ROOM_LEAVE',
-            UPDATE_DATA : 'UPDATE_DATA'
+            UPDATE_DATA : 'UPDATE_DATA',
+            COMMANDER : {
+                QUESTION_LIST : 'EVENT_ROOM_COMMANDER_QUESTION_LIST'
+            }
         },
         PROF :{
             START : 'EVENT_PROF_START',
@@ -28,6 +31,9 @@ module.exports = {
         STUDENT : {
             SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
             WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
+        },
+        QUESTION : {
+            LIST : 'EVENT_QUESTION_LIST'
         }
     },
     TO_SERVER : {

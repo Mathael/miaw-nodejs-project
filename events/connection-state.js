@@ -1,6 +1,7 @@
 var APP_EVENTS = require('../utils/events');
 var Response = require('../models/response');
 var roomController = require('../controllers/room');
+var questionController = require('../controllers/question');
 var userService = require('../services/user-service');
 
 module.exports = function (io) {

@@ -66,8 +66,14 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.waitNextQuestion();
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, function (response) {
+        global.questions = response.payload;
+        // TODO update teacher UI with list of questions availables
+        // TODO: enable "start button"
+    });
+
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
-        if(response.status === 'error' && response.message) sendAlert('error', response.message);
+        if(response && response.message) sendAlert('error', response.message);
     });
 });
 

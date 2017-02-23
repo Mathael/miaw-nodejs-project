@@ -125,7 +125,7 @@ var pageManager = {
 
         var question = new Question();
         question.text = $(fieldsetElement).find('input[name="question-text"]').val();
-        question.type = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val();
+        question.isMultiple = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val() == 'multiple';
         question.answers = [];
 
         $(fieldsetElement).find('.selector-question-true').each(function(ke, input){
@@ -175,7 +175,6 @@ var pageManager = {
         myRoom.room_password = $('input[name="room-password"]').val();
         myRoom.questions = global.questions;
 
-        global.questions = [];
         application.createRoom(myRoom);
     },
 

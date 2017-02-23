@@ -1,9 +1,12 @@
 var APP_EVENTS = require('../utils/events');
 var CONSTANTS = require('../utils/constants');
-var roomService = require('../services/room-service');
-var userService = require('../services/user-service');
-var Response = require('../models/response');
 var database = require('../utils/database');
+var Response = require('../models/response');
+
+// Services
+var roomService = require('../services/room-service');
+var questionService = require('../services/question-service');
+var userService = require('../services/user-service');
 
 module.exports = {
 
@@ -18,14 +21,34 @@ module.exports = {
 
         // Trying to create a Room
         var room = roomService.create(object);
-        if(room){
-            room._commander = socket.id;
-            socket.join(room._nsp);
-            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
+        if(!room) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL);
             return;
         }
 
-        socket.emit(APP_EVENTS.COMMONS.FAIL);
+        // The commander is the creator
+        room._commander = socket.id;
+
+        // Trying to create questions
+        var insertedQuestion = [];
+
+        object.questions.forEach(function(question) {
+            if(question.answers.length < 2) return;
+            questionService.create(question, function(result) {
+                // If question successfully inserted, push to array to send validated question to commander
+                if(result.affectedRows) insertedQuestion.push(question);
+            });
+        });
+
+        // TODO: insert answers !
+
+        // We consider question insertion wil take less than 3 secondes then we will do some logic.
+        setTimeout(function () {
+            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, new Response('success', insertedQuestion, null));
+        }, 3000);
+
+        socket.join(room._nsp);
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
     },
 
     start : function (socket,room_name) {
