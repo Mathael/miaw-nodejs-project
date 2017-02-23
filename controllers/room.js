@@ -1,8 +1,12 @@
 var APP_EVENTS = require('../utils/events');
-var roomService = require('../services/room-service');
-var userService = require('../services/user-service');
-var Response = require('../models/response');
+var CONSTANTS = require('../utils/constants');
 var database = require('../utils/database');
+var Response = require('../models/response');
+
+// Services
+var roomService = require('../services/room-service');
+var questionService = require('../services/question-service');
+var userService = require('../services/user-service');
 
 module.exports = {
 
@@ -17,14 +21,34 @@ module.exports = {
 
         // Trying to create a Room
         var room = roomService.create(object);
-        if(room){
-            room._commander = socket.id;
-            socket.join(room._nsp);
-            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
+        if(!room) {
+            socket.emit(APP_EVENTS.COMMONS.FAIL);
             return;
         }
 
-        socket.emit(APP_EVENTS.COMMONS.FAIL);
+        // The commander is the creator
+        room._commander = socket.id;
+
+        // Trying to create questions
+        var insertedQuestion = [];
+
+        object.questions.forEach(function(question) {
+            if(question.answers.length < 2) return;
+            questionService.create(question, function(result) {
+                // If question successfully inserted, push to array to send validated question to commander
+                if(result.affectedRows) insertedQuestion.push(question);
+            });
+        });
+
+        // TODO: insert answers !
+
+        // We consider question insertion wil take less than 3 secondes then we will do some logic.
+        setTimeout(function () {
+            socket.emit(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, new Response('success', insertedQuestion, null));
+        }, 3000);
+
+        socket.join(room._nsp);
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));
     },
 
     start : function (socket,room_name) {
@@ -85,8 +109,6 @@ module.exports = {
 
     join: function (socket, room_name, username) {
 
-        // TODO: check username
-
         var room = roomService.findOne(room_name);
         var user = userService.findClientById(socket.id);
         var userSocket = userService.getSocketClient(user._id);
@@ -96,6 +118,8 @@ module.exports = {
             return;
         }
 
+        user._username = username;
+
         if(!room) {
             userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
             return;
@@ -103,6 +127,19 @@ module.exports = {
 
         if(room.hasUser(user._id) || room._commander == user._id) {
             userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
+            return;
+        }
+
+        if(!user._username || user._username.length < 3) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le nom doit avoir une longueur de 4 caractères minimum.'));
+            return;
+        }
+
+        // Check if its an appropriate username
+        if(CONSTANTS.BANNED_NAMES.find(function(name){
+                return name == user._username.toLowerCase();
+            })) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le nom n\'est pas approprié pour rejoindre ce salon.'));
             return;
         }
 
@@ -178,7 +215,9 @@ module.exports = {
             return;
         }
 
-        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, room);
+        var isCommander = room._commander == socket.id;
+        var data = {isCommander:isCommander, room:room};
+        socket.emit(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, new Response('success', data, null));
     },
 
     remove: function (socket, name) {

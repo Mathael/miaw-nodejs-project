@@ -9,7 +9,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.UPDATE_DATA, function (data) {
-        if(data.status !== 'success') sendAlert(data.status, data.message);
+        if(data.message) sendAlert(data.status, data.message);
         if(data.payload && global.room) {
             global.room = data.payload;
             console.log('update event received', global.room);
@@ -18,7 +18,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.GET_MY_ROOM_INFORMATIONS, function (data) {
-        pageManager.displayMyRoom(data);
+        if(!data) sendAlert('error', 'Réponse inattendue de la part du serveur.');
+        data.payload.isCommander ? pageManager.displayRoomForTeacher(data.payload) : pageManager.insideRoom();
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
@@ -40,9 +41,8 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
-                sendAlert('info', response.message);
                 global.room = response.payload.room;
-                pageManager.displayMyRoom(response.payload.room);
+                pageManager.displayRoomForTeacher(response.payload.room);
             }else {
                 pageManager.insideRoom();
             }
@@ -66,8 +66,14 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.waitNextQuestion();
     });
 
+    socket.on(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, function (response) {
+        global.questions = response.payload;
+        // TODO update teacher UI with list of questions availables
+        // TODO: enable "start button"
+    });
+
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
-        if(response.status === 'error' && response.message) sendAlert('error', response.message);
+        if(response && response.message) sendAlert('error', response.message);
     });
 });
 

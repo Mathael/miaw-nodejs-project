@@ -1,6 +1,7 @@
 var APP_EVENTS = require('../utils/events');
 var Response = require('../models/response');
 var roomController = require('../controllers/room');
+var questionController = require('../controllers/question');
 var userService = require('../services/user-service');
 
 module.exports = function (io) {
@@ -13,8 +14,8 @@ module.exports = function (io) {
         socket.emit(APP_EVENTS.COMMONS.CON_STATE.SUCCESS, new Response('success', {id: socket.id, events: APP_EVENTS}, 'Connection successful'));
 
         // Handle client disconnect and to keep client list updated and notify everyone of clients count
-        socket.on('disconnect', function (data) {
-            userService.removeClient(data.id);
+        socket.on('disconnect', function () {
+            userService.removeClient(socket.id);
             io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, userService.getCount());
             console.log('[IO] Client disconnected.');
         });
@@ -39,8 +40,8 @@ module.exports = function (io) {
             roomController.remove(socket, room_name);
         });
 
-        socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (room_name) {
-            roomController.join(socket, room_name, 'NoName');
+        socket.on(APP_EVENTS.TO_SERVER.ROOM.JOIN, function (data) {
+            roomController.join(socket, data.name, data.username);
         });
 
         socket.on(APP_EVENTS.TO_SERVER.ROOM.UNLOCK, function (data) {
@@ -60,19 +61,19 @@ module.exports = function (io) {
         });
 
         //////////////////////////////////////////////////
-        ///                 USER EVENTS                ///
+        ///               TEACHER EVENTS               ///
         //////////////////////////////////////////////////
         socket.on(APP_EVENTS.TO_SERVER.PROF.START, function (room_name) {
             roomController.start(this,room_name);
         });
 
-        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
-            roomController.nextQuestion(this,name,id_question);
-        });
-
         //////////////////////////////////////////////////
         ///               QUESTION EVENTS              ///
         //////////////////////////////////////////////////
+
+        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
+            roomController.nextQuestion(this,name,id_question);
+        });
 
         //////////////////////////////////////////////////
         ///                ANSWER EVENTS               ///

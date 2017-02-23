@@ -14,7 +14,7 @@ var pageManager = {
 
     },
 
-    displayMyRoom : function (room) {
+    displayRoomForTeacher : function (room) {
         if(!room) return;
 
         this.clearBody();
@@ -31,7 +31,6 @@ var pageManager = {
     },
 
     updateRoomData : function (room) {
-        console.log('updateRoomData', room);
         if(!room) return;
 
         // Update Room members list
@@ -126,7 +125,7 @@ var pageManager = {
 
         var question = new Question();
         question.text = $(fieldsetElement).find('input[name="question-text"]').val();
-        question.type = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val();
+        question.isMultiple = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val() == 'multiple';
         question.answers = [];
 
         $(fieldsetElement).find('.selector-question-true').each(function(ke, input){
@@ -176,7 +175,6 @@ var pageManager = {
         myRoom.room_password = $('input[name="room-password"]').val();
         myRoom.questions = global.questions;
 
-        global.questions = [];
         application.createRoom(myRoom);
     },
 
@@ -190,10 +188,10 @@ var pageManager = {
             .attr({type:'button'})
             .text('Entrer dans le salon')
             .on('click', function () {
-                var name = $(input).val();
-                if(name && name.length > 1){
-                    application.join(roomName);
-                }
+                var username = $(input).val();
+                if(username && username.length > 3)
+                    application.join(roomName, username);
+                else sendAlert('error', 'Le nom doit avoir une longueur de 4 caractères minimum.');
             });
 
         form

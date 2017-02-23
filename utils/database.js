@@ -2,7 +2,7 @@ var constants = require('./constants');
 var mysql = require('mysql');
 
 module.exports = {
-    executeQuery : function(query, callback) {
+    executeQuery : function(query, parameters, callback) {
         var connector = mysql.createConnection({
             host: constants.DATABASE.HOST,
             user: constants.DATABASE.USERNAME,
@@ -13,10 +13,11 @@ module.exports = {
 
         connector.connect(function (err) {
             if (err) console.log('erreur de connexion : ', err.message);
-            else {
-                connector.query(query, function (err, rows, fields) {
+            else
+            {
+                connector.query(query, parameters, function (err, rows) {
                     if (err) throw err;
-                    callback(rows, fields);
+                    if(callback) callback(rows);
                     connector.end();
                 });
             }
