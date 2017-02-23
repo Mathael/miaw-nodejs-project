@@ -24,6 +24,10 @@ module.exports = {
             STOP :'EVENT_PROF_STOP',
             SHOWSTAT : 'EVENT_PROF_STAT',
             NEXT : 'EVENT_PROF_NEXT'
+        },
+        STUDENT : {
+            SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
+            WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
         }
     },
     TO_SERVER : {
@@ -43,6 +47,10 @@ module.exports = {
             STOP :'EVENT_PROF_STOP',
             SHOWSTAT : 'EVENT_PROF_STAT',
             NEXT : 'EVENT_PROF_NEXT'
+        },
+        STUDENT : {
+            SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
+            WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
         }
     }
 };

@@ -4,6 +4,16 @@ var pageManager = {
         $('#content').empty();
     },
 
+    waitNextQuestion : function () {
+        this.clearBody();
+
+        var content = $('#content');
+
+        content.append('<h2>Merci pour votre vote</h2>');
+        content.append('<div>La question suivante arrive dans très peu de temps</div>');
+
+    },
+
     displayMyRoom : function (room) {
         if(!room) return;
 
@@ -201,7 +211,7 @@ var pageManager = {
         );
     },
 
-    showQuestion : function (data) {
+    showQuestion : function (data,room_name) {
 
         var question = data;
 
@@ -214,22 +224,52 @@ var pageManager = {
         var typeInput;
         //checkbox
         if(question.type=="multiple") {
-            typeInput="radio";
+            typeInput="checkbox";
         }//Radio button
         else{
-            typeInput="checkbox";
+            typeInput="radio";
         }
 
         content.append('<h3>Reponses : </h3>');
+        var form =  $('<form>').attr('id','answers');
+
         var listAnswers = $('<ul>');
         for(var i in question.answers) {
 
             var li = $('<li>').appendTo(listAnswers);
 
-            var input = $('<input>').attr('type',typeInput).val(i).appendTo(li);
+            var input = $('<input>').attr({type:typeInput,name:"answerRadio"}).val(i).appendTo(li);
             var span = $('<span>').html(question.answers[i].text).appendTo(li);
         }
-        content.append(listAnswers);
+        listAnswers.appendTo(form);
+
+        content.append(form);
+        var send = $('<button>')
+            .attr({type:'button'})
+            .text("Valider")
+            .on('click', function () {
+                var answer=[];
+                if(typeInput=="radio") {
+
+                    var radioCheck = $('input[name=answerRadio]:checked', '#answers').val();
+                    answer.push(radioCheck);
+
+                }else{
+
+                    var tabCheckBox = $('input[name=answerRadio]:checked');
+                    tabCheckBox.each(function(i,check){
+                        answer.push(check.value);
+                    });
+
+                }
+
+                if(answer.length>0){
+                    application.sendAnswer(room_name,answer);
+                }else{
+                    content.append('<div>Vous devez répondre à au moins une question</div>');
+                }
+            });
+        content.append(send);
     },
 
     profLaunchQCM: function() {
