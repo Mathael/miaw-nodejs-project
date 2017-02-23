@@ -189,10 +189,10 @@ var pageManager = {
             .attr({type:'button'})
             .text('Entrer dans le salon')
             .on('click', function () {
-                var name = $(input).val();
-                if(name && name.length > 1){
-                    application.join(roomName);
-                }
+                var username = $(input).val();
+                if(username && username.length > 3)
+                    application.join(roomName, username);
+                else sendAlert('error', 'Le nom doit avoir une longueur de 4 caractères minimum.');
             });
 
         form

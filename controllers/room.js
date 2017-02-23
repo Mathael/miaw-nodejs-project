@@ -1,4 +1,5 @@
 var APP_EVENTS = require('../utils/events');
+var CONSTANTS = require('../utils/constants');
 var roomService = require('../services/room-service');
 var userService = require('../services/user-service');
 var Response = require('../models/response');
@@ -85,8 +86,6 @@ module.exports = {
 
     join: function (socket, room_name, username) {
 
-        // TODO: check username
-
         var room = roomService.findOne(room_name);
         var user = userService.findClientById(socket.id);
         var userSocket = userService.getSocketClient(user._id);
@@ -96,6 +95,8 @@ module.exports = {
             return;
         }
 
+        user._username = username;
+
         if(!room) {
             userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le salon n\'existe pas'));
             return;
@@ -103,6 +104,19 @@ module.exports = {
 
         if(room.hasUser(user._id) || room._commander == user._id) {
             userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Vous êtes déjà présent dans ce salon'));
+            return;
+        }
+
+        if(!user._username || user._username.length < 3) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le nom doit avoir une longueur de 4 caractères minimum.'));
+            return;
+        }
+
+        // Check if its an appropriate username
+        if(CONSTANTS.BANNED_NAMES.find(function(name){
+                return name == user._username.toLowerCase();
+            })) {
+            userSocket.emit(APP_EVENTS.COMMONS.FAIL, new Response('error', null, 'Le nom n\'est pas approprié pour rejoindre ce salon.'));
             return;
         }
 
