@@ -68,6 +68,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, function (response) {
         global.questions = response.payload;
+        console.log(global.questions);
         // TODO update teacher UI with list of questions availables
         // TODO: enable "start button"
     });

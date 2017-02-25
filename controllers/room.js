@@ -6,6 +6,7 @@ var Response = require('../models/response');
 // Services
 var roomService = require('../services/room-service');
 var questionService = require('../services/question-service');
+var answerService = require('../services/answer-service');
 var userService = require('../services/user-service');
 
 module.exports = {
@@ -33,19 +34,36 @@ module.exports = {
         var insertedQuestion = [];
 
         object.questions.forEach(function(question) {
-            if(question.answers.length < 2) return;
+            if(!question.answers || question.answers.length < 2) return; // minimum 2 choices
+            if(question.answers.map(function(e) { return e.good; }).length == 0) return; // Minimum 1 good answer
+            if(question.answers.map(function(e) { return !e.good; }).length == 0) return; // Minimum 1 bad answer
+
             questionService.create(question, function(result) {
                 // If question successfully inserted, push to array to send validated question to commander
-                if(result.affectedRows) insertedQuestion.push(question);
+                if(result.affectedRows) {
+                    var answers = [];
+
+                    // Then insert answers
+                    question.answers.forEach(function(answer) {
+                        answerService.create(question._id, answer, function(result){
+                            if(result.affectedRows) {
+                                answer._id = result.insertId;
+                                answers.push(answer);
+                            }
+                        });
+                        question.answers = answers;
+                    });
+
+                    question._id = result.insertId;
+                    insertedQuestion.push(question);
+                }
             });
         });
 
-        // TODO: insert answers !
-
-        // We consider question insertion wil take less than 3 secondes then we will do some logic.
+        // We consider question insertion wil take less than 5 secondes then we will do some logic.
         setTimeout(function () {
             socket.emit(APP_EVENTS.TO_CLIENT.ROOM.COMMANDER.QUESTION_LIST, new Response('success', insertedQuestion, null));
-        }, 3000);
+        }, 5000);
 
         socket.join(room._nsp);
         socket.emit(APP_EVENTS.TO_CLIENT.ROOM.JOIN_SUCCESS, new Response('success', {room: room, isCommander:true}, 'Vous devez déverouiller le salon pour le rendre accessible'));

@@ -8,5 +8,4 @@ function Answer(answer, good) {
     this.good = good;
 }
 
-
 module.exports = Answer;
