@@ -275,7 +275,7 @@ var pageManager = {
 
         var data = this.getMockData();
 
-        //this.displayQuestion(data, 0);
+        this.displayQuestion(data, 0);
 
         // For the teacher: displays information about question, answers and current scores
         this.displayTeacherInfo(data, 0);
@@ -306,9 +306,11 @@ var pageManager = {
         }
 
         content.append(list);
-        $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current);});
-        content.append("<a href='#'>Arrêter</a>");
+        content.append("<a href='#' id='next_question'>Question suivante</a>");
+        $('#next_question').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
+        content.append("<a href='#' id='display_chart'>Afficher le graphique</a>");
+        $('#display_chart').on('click', function(){pageManager.displayChart(current);});
+        content.append("<a href='#' id='stop_session'>Arrêter</a>");
     },
 
     displayChart: function(current){
