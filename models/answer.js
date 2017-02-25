@@ -2,10 +2,11 @@
 var method = Answer.prototype;
 
 function Answer(answer, good) {
-    if(answer === undefined) this.answer = "Une réponse !";
-    this.answer = answer;
-    if(good === undefined) this.good = false;
-    this.good = good;
+    if(answer === undefined) this._text = "Une réponse !";
+    if(good === undefined) this._good = false;
+
+    this._text = answer;
+    this._good = good;
 }
 
 module.exports = Answer;

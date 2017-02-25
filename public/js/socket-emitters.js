@@ -23,9 +23,9 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.JOIN, {name: name, username:username});
     },
 
-    start : function (name) {
-        console.log('emitting in start() with event name ' + APP_EVENTS.TO_SERVER.PROF.START);
-        socket.emit(APP_EVENTS.TO_SERVER.PROF.START, name);
+    start : function () {
+        global.room.current_question = 0;
+        socket.emit(APP_EVENTS.TO_SERVER.TEACHER.START);
     },
 
     toggleRoomLock : function() {
@@ -40,12 +40,13 @@ var application = {
         socket.emit(APP_EVENTS.TO_SERVER.ROOM.EXPEL, id);
     },
 
-    nextQuestionEtu : function (name,question) {
-        socket.emit(APP_EVENTS.TO_SERVER.PROF.NEXT,name,question);
-
+    nextQuestion : function () {
+        global.room.current_question++;
+        socket.emit(APP_EVENTS.TO_SERVER.TEACHER.NEXT, global.room.current_question);
     },
 
-    sendAnswer : function (room_name,answer) {
-        socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SENDANSWER,room_name,answer);
+    sendAnswers : function (answers) {
+        console.log('emitting sendAnswers() with event name ' + APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
+        socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
     }
 };

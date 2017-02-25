@@ -16,7 +16,9 @@
                 <h2>Rappel des questions avant le début du test</h2>
             </section>
             <section id="room-navigation">
-                <a href="#" onclick="pageManager.profLaunchQCM()">Démarrer</a>
+                <a id="question-start" href="#" onclick="pageManager.launchQCM()">Démarrer</a>
+                <a id="question-next" href="#" onclick="application.nextQuestion()">Question suivante</a>
+                <a id="question-chart" href="#" onclick="pageManager.displayChart()">Afficher le graphique</a>
             </section>
             <section>
                 <a id="toggleRoomLock" href="#" onclick="application.toggleRoomLock()"></a>

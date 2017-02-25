@@ -12,6 +12,7 @@ module.exports = {
         }) != null) return null;
 
         var room = new Room(object.room_name, null);
+        room._description = object.room_description;
 
         // If current commander is the commander of another room, it will not able to create another one
         /*

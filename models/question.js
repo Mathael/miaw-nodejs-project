@@ -1,14 +1,15 @@
 // Class question
 var method = Question.prototype;
 
-function Question(question, multiple) {
-    if(question === undefined) this.text = "Posez votre question aux étudiants"; else this.text = question;
-    if(multiple === undefined) this.isMultiple = false; else this.isMultiple = multiple;
-    this.answers = [];
+function Question(text, multiple) {
+    this._text = text;
+    multiple == undefined ? this._isMultiple = false : this._isMultiple = multiple;
+    this._answers = [];
+    this._committed = []; // Users answers for the current question are stored here
 }
 
 method.addAnswer = function(answer) {
-    this.answers.push(answer);
+    this._answers.push(answer);
     return answer;
 };
 

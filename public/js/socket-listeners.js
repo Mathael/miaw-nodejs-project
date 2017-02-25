@@ -22,12 +22,10 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         data.payload.isCommander ? pageManager.displayRoomForTeacher(data.payload) : pageManager.insideRoom();
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
-        pageManager.displayQuestion(data);
-    });
-
-    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data,room_name) {
-        pageManager.showQuestion(data,room_name);
+    socket.on(APP_EVENTS.TO_CLIENT.QUESTION.SHOW, function (response) {
+        if(response.message) sendAlert(response.status, response.message);
+        pageManager.displayTeacherInfo(response.payload);
+        pageManager.showQuestion(response.payload);
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
@@ -38,6 +36,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         if(response.payload != null) {
             // Display join success
             if (response.status && response.message) sendAlert(response.status, response.message);
+            global.room = response.payload;
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
@@ -58,10 +57,11 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, function (response) {
         sendAlert(response.status, response.message);
+        global.room = null;
         pageManager.displayRooms(response.payload);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.STUDENT.WAITNEXT, function (response) {
+    socket.on(APP_EVENTS.TO_CLIENT.STUDENT.WAIT, function (response) {
         sendAlert(response.status, response.message);
         pageManager.waitNextQuestion();
     });
@@ -71,6 +71,11 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         console.log(global.questions);
         // TODO update teacher UI with list of questions availables
         // TODO: enable "start button"
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.TEACHER.NEW_ANSWER_PUSHED, function(response) {
+        if (response.status != 'success' && response.message) sendAlert(response.status, response.message);
+        console.log(response.payload);
     });
 
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {

@@ -6,7 +6,7 @@ var database = require('../utils/database');
 module.exports = {
 
     create : function (question, callback) {
-        database.executeQuery('INSERT INTO question(text, ismultiple) VALUES(?, ?)', [question.text, question.isMultiple], callback);
+        database.executeQuery('INSERT INTO question(text, ismultiple) VALUES(?, ?)', [question._text, question._isMultiple], callback);
     },
 
     getCount : function (callback) {

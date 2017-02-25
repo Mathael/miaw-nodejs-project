@@ -4,9 +4,12 @@ var method = Room.prototype;
 function Room(name, commander) {
     this._nsp = '/'+name;
     this._name = name;
+    this._description = '';
     this._commander = commander; // TODO: currently its a SOCKET ID. It must be an User Object
     this._members = [];
     this._isLocked = true;
+    this._questions = [];
+    this.current_question = 0; // First question by default;
 }
 
 method.hasUser = function (id) {
