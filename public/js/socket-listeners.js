@@ -24,11 +24,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
     socket.on(APP_EVENTS.TO_CLIENT.QUESTION.SHOW, function (response) {
         if(response.message) sendAlert(response.status, response.message);
-        pageManager.showQuestion(response.payload);
-    });
-
-    socket.on(APP_EVENTS.TO_CLIENT.TEACHER.NEXT, function (response) {
-        if(response.message) sendAlert(response.status, response.message);
+        pageManager.displayTeacherInfo(response.payload);
         pageManager.showQuestion(response.payload);
     });
 
@@ -65,7 +61,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         pageManager.displayRooms(response.payload);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.STUDENT.WAITNEXT, function (response) {
+    socket.on(APP_EVENTS.TO_CLIENT.STUDENT.WAIT, function (response) {
         sendAlert(response.status, response.message);
         pageManager.waitNextQuestion();
     });
@@ -75,6 +71,11 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         console.log(global.questions);
         // TODO update teacher UI with list of questions availables
         // TODO: enable "start button"
+    });
+
+    socket.on(APP_EVENTS.TO_CLIENT.TEACHER.NEW_ANSWER_PUSHED, function(response) {
+        if (response.status != 'success' && response.message) sendAlert(response.status, response.message);
+        console.log(response.payload);
     });
 
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {

@@ -24,7 +24,6 @@ var application = {
     },
 
     start : function () {
-        console.log('emitting start() with event name ' + APP_EVENTS.TO_SERVER.TEACHER.START);
         global.room.current_question = 0;
         socket.emit(APP_EVENTS.TO_SERVER.TEACHER.START);
     },
@@ -43,11 +42,11 @@ var application = {
 
     nextQuestion : function () {
         global.room.current_question++;
-        console.log('emitting next() with event name ' + APP_EVENTS.TO_SERVER.TEACHER.NEXT, global.room.current_question);
         socket.emit(APP_EVENTS.TO_SERVER.TEACHER.NEXT, global.room.current_question);
     },
 
-    sendAnswer : function (room_name,answer) {
-        socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SENDANSWER,room_name,answer);
+    sendAnswers : function (answers) {
+        console.log('emitting sendAnswers() with event name ' + APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
+        socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
     }
 };

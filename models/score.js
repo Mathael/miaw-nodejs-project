@@ -2,7 +2,7 @@
 var method = Score.prototype;
 
 function Score(question) {
-    if(question === undefined) this.question = null; else this.question = question;
+    this.question = question;
     this.scores = [];
 }
 

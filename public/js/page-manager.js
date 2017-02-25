@@ -6,11 +6,7 @@ var pageManager = {
 
     waitNextQuestion : function () {
         this.clearBody();
-
-        var content = $('#content');
-
-        content.append('<h2>Merci pour votre vote</h2>');
-        content.append('<div>La question suivante arrive dans très peu de temps</div>');
+        $('<div>').text('En attente de la question suivante...').appendTo('#content');
     },
 
     displayRoomForTeacher : function (room) {
@@ -238,7 +234,7 @@ var pageManager = {
 
         question._answers.forEach(function(answer){
             var li = $('<li>').appendTo(listAnswers);
-            var input = $('<input>').attr({type:inputType,name:'answerRadio'}).val(answer._text).appendTo(li);
+            var input = $('<input>').attr({type:inputType,name:'answerRadio',id:answer._id}).val(answer._text).appendTo(li);
             var span = $('<span>').text(answer._text).appendTo(li);
         });
 
@@ -251,16 +247,16 @@ var pageManager = {
             .on('click', function () {
                 var answers = [];
                 if(inputType == 'radio') {
-                    var radioCheck = $('input[name=answerRadio]:checked', '#answers').val();
-                    if(radioCheck != null) answers.push(radioCheck);
+                    var radioCheck = $('input[name=answerRadio]:checked', '#answers');
+                    if(radioCheck != null) answers.push(radioCheck.attr('id'));
                 }else{
                     var tabCheckBox = $('input[name=answerRadio]:checked');
                     tabCheckBox.each(function(index,check){
-                        answers.push(check.value);
+                        answers.push(check.attr('id'));
                     });
                 }
 
-                answers.length > 0 ? application.sendAnswer(answers) : sendAlert('error', 'Vous devez répondre à au moins une question');
+                answers.length > 0 ? application.sendAnswers(answers) : sendAlert('error', 'Vous sélectionner au moins une réponse.');
             })
             .appendTo(content);
     },

@@ -25,11 +25,11 @@ module.exports = {
         TEACHER :{
             STOP :'EVENT_TEACHER_STOP',
             SHOW_STAT : 'EVENT_TEACHER_STAT',
-            NEXT : 'EVENT_TEACHER_NEXT'
+            NEXT : 'EVENT_TEACHER_NEXT',
+            NEW_ANSWER_PUSHED : 'EVENT_TEACHER_NEW_ANSWER_PUSHED'
         },
         STUDENT : {
-            SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
-            WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
+            WAIT : 'EVENT_WAIT_NEXTQUESTION'
         },
         QUESTION : {
             LIST : 'EVENT_QUESTION_LIST',
@@ -55,8 +55,7 @@ module.exports = {
             NEXT : 'EVENT_TEACHER_NEXT'
         },
         STUDENT : {
-            SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
-            WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
+            SEND_ANSWER : 'EVENT_STUDENT_SENDANSWER'
         }
     }
 };
