@@ -331,6 +331,12 @@ var pageManager = {
             cData.push(i);
         }
         setBarChart(cLabels, cData);
+
+        $('#content').append("<a href='#' id='display_chart_out'>Projeter</a> ");
+        $('#content').append("<a href='#' id='back_question'>Retour à la question</a> ");
+        $('#next_question').on('click', function(){pageManager.displayQuestion(questions, current-1);}).appendTo(content);
+        $('#content').append("<a href='#' id='next_question'>Question suivante</a> ");
+        $('#next_question').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
     },
 
     nextQuestion: function(data, current){
