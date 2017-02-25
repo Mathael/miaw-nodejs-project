@@ -1,7 +1,6 @@
 var APP_EVENTS = require('../utils/events');
 var Response = require('../models/response');
 var roomController = require('../controllers/room');
-var questionController = require('../controllers/question');
 var userService = require('../services/user-service');
 
 module.exports = function (io) {
@@ -52,10 +51,6 @@ module.exports = function (io) {
             roomController.toggleLock(socket, data.room_name, true);
         });
 
-        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (room_name,question) {
-            roomController.nextQuestion(socket,room_name,question);
-        });
-
         socket.on(APP_EVENTS.TO_SERVER.ROOM.EXPEL, function (memberId) {
             roomController.expel(socket, memberId);
         });
@@ -63,16 +58,12 @@ module.exports = function (io) {
         //////////////////////////////////////////////////
         ///               TEACHER EVENTS               ///
         //////////////////////////////////////////////////
-        socket.on(APP_EVENTS.TO_SERVER.PROF.START, function (room_name) {
-            roomController.start(this,room_name);
+        socket.on(APP_EVENTS.TO_SERVER.TEACHER.START, function () {
+            roomController.start(this);
         });
 
-        //////////////////////////////////////////////////
-        ///               QUESTION EVENTS              ///
-        //////////////////////////////////////////////////
-
-        socket.on(APP_EVENTS.TO_SERVER.PROF.NEXT, function (name,id_question) {
-            roomController.nextQuestion(this,name,id_question);
+        socket.on(APP_EVENTS.TO_SERVER.TEACHER.NEXT, function (position) {
+            roomController.nextQuestion(this, position);
         });
 
         //////////////////////////////////////////////////

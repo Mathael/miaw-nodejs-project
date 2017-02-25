@@ -22,12 +22,14 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         data.payload.isCommander ? pageManager.displayRoomForTeacher(data.payload) : pageManager.insideRoom();
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.PROF.START, function (data) {
-        pageManager.displayQuestion(data);
+    socket.on(APP_EVENTS.TO_CLIENT.QUESTION.SHOW, function (response) {
+        if(response.message) sendAlert(response.status, response.message);
+        pageManager.showQuestion(response.payload);
     });
 
-    socket.on(APP_EVENTS.TO_CLIENT.PROF.NEXT, function (data,room_name) {
-        pageManager.showQuestion(data,room_name);
+    socket.on(APP_EVENTS.TO_CLIENT.TEACHER.NEXT, function (response) {
+        if(response.message) sendAlert(response.status, response.message);
+        pageManager.showQuestion(response.payload);
     });
 
     socket.on(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, function (data) {
@@ -38,6 +40,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
         if(response.payload != null) {
             // Display join success
             if (response.status && response.message) sendAlert(response.status, response.message);
+            global.room = response.payload;
 
             // Notify commander to unlock the room to enable "join room" button
             if(response.payload.isCommander === true) {
@@ -58,6 +61,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
 
     socket.on(APP_EVENTS.TO_CLIENT.ROOM.LEAVE, function (response) {
         sendAlert(response.status, response.message);
+        global.room = null;
         pageManager.displayRooms(response.payload);
     });
 

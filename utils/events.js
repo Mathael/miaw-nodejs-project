@@ -22,18 +22,18 @@ module.exports = {
                 QUESTION_LIST : 'EVENT_ROOM_COMMANDER_QUESTION_LIST'
             }
         },
-        PROF :{
-            START : 'EVENT_PROF_START',
-            STOP :'EVENT_PROF_STOP',
-            SHOWSTAT : 'EVENT_PROF_STAT',
-            NEXT : 'EVENT_PROF_NEXT'
+        TEACHER :{
+            STOP :'EVENT_TEACHER_STOP',
+            SHOW_STAT : 'EVENT_TEACHER_STAT',
+            NEXT : 'EVENT_TEACHER_NEXT'
         },
         STUDENT : {
             SENDANSWER : 'EVENT_STUDENT_SENDANSWER',
             WAITNEXT : 'EVENT_WAIT_NEXTQUESTION'
         },
         QUESTION : {
-            LIST : 'EVENT_QUESTION_LIST'
+            LIST : 'EVENT_QUESTION_LIST',
+            SHOW : 'EVENT_QUESTION_SHOW'
         }
     },
     TO_SERVER : {
@@ -48,11 +48,11 @@ module.exports = {
             LEAVE : 'EVENT_ROOM_LEAVE',
             EXPEL : 'EVENT_ROOM_EXPEL'
         },
-        PROF :{
-            START : 'EVENT_PROF_START',
-            STOP :'EVENT_PROF_STOP',
-            SHOWSTAT : 'EVENT_PROF_STAT',
-            NEXT : 'EVENT_PROF_NEXT'
+        TEACHER :{
+            START : 'EVENT_TEACHER_START',
+            STOP :'EVENT_TEACHER_STOP',
+            SHOW_STAT : 'EVENT_TEACHER_STAT',
+            NEXT : 'EVENT_TEACHER_NEXT'
         },
         STUDENT : {
             SENDANSWER : 'EVENT_STUDENT_SENDANSWER',

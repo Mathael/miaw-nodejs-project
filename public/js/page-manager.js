@@ -11,7 +11,6 @@ var pageManager = {
 
         content.append('<h2>Merci pour votre vote</h2>');
         content.append('<div>La question suivante arrive dans très peu de temps</div>');
-
     },
 
     displayRoomForTeacher : function (room) {
@@ -124,18 +123,18 @@ var pageManager = {
         var fieldsetElement = $('#selector-question');
 
         var question = new Question();
-        question.text = $(fieldsetElement).find('input[name="question-text"]').val();
-        question.isMultiple = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val() == 'multiple';
-        question.answers = [];
+        question._text = $(fieldsetElement).find('input[name="question-text"]').val();
+        question._isMultiple = $(fieldsetElement).find('input[type="radio"][name="answer-type"]:checked').val() == 'multiple';
+        question._answers = [];
 
         $(fieldsetElement).find('.selector-question-true').each(function(ke, input){
             var inputValue = $(input).val();
             if(inputValue != null && inputValue != '')
             {
                 var answer = new Answer();
-                answer.text = inputValue;
-                answer.good = true;
-                question.answers.push(answer);
+                answer._text = inputValue;
+                answer._good = true;
+                question._answers.push(answer);
             }
         });
 
@@ -144,16 +143,16 @@ var pageManager = {
             if(inputValue != null && inputValue != '')
             {
                 var answer = new Answer();
-                answer.text = inputValue;
-                answer.good = false;
-                question.answers.push(answer);
+                answer._text = inputValue;
+                answer._good = false;
+                question._answers.push(answer);
             }
 
         });
 
         global.questions.push(question);
 
-        var li = $('<li>').text(question.text);
+        var li = $('<li>').text(question._text);
         $('#selector-questions-previsualisation').append(li);
     },
 
@@ -166,12 +165,15 @@ var pageManager = {
     },
 
     validateRoomCreation: function () {
-        //TODO: check global.questions.length
+        if(global.questions.length == 0) {
+            sendAlert('error', 'Vous devez spécifier au moins une question et la valider pour qu\'elle soit prise en compte');
+            return;
+        }
 
         var myRoom = new Room();
         myRoom.room_name = $('input[name="room-name"]').val();
         myRoom.room_username = $('input[name="room-username"]').val();
-        myRoom.room_descr = $('input[name="room-descr"]').val();
+        myRoom.room_description = $('input[name="room-descr"]').val();
         myRoom.room_password = $('input[name="room-password"]').val();
         myRoom.questions = global.questions;
 
@@ -179,6 +181,11 @@ var pageManager = {
     },
 
     displayJoinForm : function (roomName) {
+        if(global.room !== null) {
+            sendAlert('error', 'Vous faites déjà partie d\'un salon');
+            return;
+        }
+
         this.clearBody();
 
         var form = $('<form>');
@@ -209,108 +216,86 @@ var pageManager = {
         );
     },
 
-    showQuestion : function (data,room_name) {
-
-        var question = data;
+    showQuestion : function (question) {
+        if(!question) {
+            console.error('page-manager.js', 'displayQuestion(question)', 'Question is undefined', question);
+            return;
+        }
 
         this.clearBody();
 
         var content = $('#content');
 
-        content.append('<h3>Question : '+question.text+'</h3>');
+        $('<h2>').text('Question en cours').css('text-align', 'center').appendTo(content);
+        $('<h3>').text(question._text).appendTo(content);
 
-        var typeInput;
-        //checkbox
-        if(question.type=="multiple") {
-            typeInput="checkbox";
-        }//Radio button
-        else{
-            typeInput="radio";
-        }
+        var inputType = question._isMultiple ? 'checkbox' : 'radio';
 
-        content.append('<h3>Reponses : </h3>');
+        $('<h3>').text('Réponse(s)').appendTo(content);
+
         var form =  $('<form>').attr('id','answers');
-
         var listAnswers = $('<ul>');
-        for(var i in question.answers) {
 
+        question._answers.forEach(function(answer){
             var li = $('<li>').appendTo(listAnswers);
+            var input = $('<input>').attr({type:inputType,name:'answerRadio'}).val(answer._text).appendTo(li);
+            var span = $('<span>').text(answer._text).appendTo(li);
+        });
 
-            var input = $('<input>').attr({type:typeInput,name:"answerRadio"}).val(i).appendTo(li);
-            var span = $('<span>').html(question.answers[i].text).appendTo(li);
-        }
         listAnswers.appendTo(form);
+        form.appendTo(content);
 
-        content.append(form);
-        var send = $('<button>')
+        $('<button>')
             .attr({type:'button'})
-            .text("Valider")
+            .text('Valider ma réponse')
             .on('click', function () {
-                var answer=[];
-                if(typeInput=="radio") {
-
+                var answers = [];
+                if(inputType == 'radio') {
                     var radioCheck = $('input[name=answerRadio]:checked', '#answers').val();
-                    answer.push(radioCheck);
-
+                    if(radioCheck != null) answers.push(radioCheck);
                 }else{
-
                     var tabCheckBox = $('input[name=answerRadio]:checked');
-                    tabCheckBox.each(function(i,check){
-                        answer.push(check.value);
+                    tabCheckBox.each(function(index,check){
+                        answers.push(check.value);
                     });
-
                 }
 
-                if(answer.length>0){
-                    application.sendAnswer(room_name,answer);
-                }else{
-                    content.append('<div>Vous devez répondre à au moins une question</div>');
-                }
-            });
-        content.append(send);
+                answers.length > 0 ? application.sendAnswer(answers) : sendAlert('error', 'Vous devez répondre à au moins une question');
+            })
+            .appendTo(content);
     },
 
-    profLaunchQCM: function() {
-        application.start(global.room._name);
-
-        var data = this.getMockData();
-
-        this.displayQuestion(data, 0);
+    launchQCM: function() {
+        // Commander will request to the server to emit the first question to the room.
+        application.start();
 
         // For the teacher: displays information about question, answers and current scores
-        this.displayTeacherInfo(data, 0);
-
-        //First question for student
-        application.nextQuestionEtu(global.room._name,data[0]);
+        this.displayTeacherInfo(global.questions[0]);
     },
 
-    displayTeacherInfo: function(questions, current){
-        this.clearBody();
-
-        if(questions == null) return;
-
-        if(current == null) current = 0;
-
-        if(questions[current].answers == null) return;
+    // Display the current question to teacher
+    displayTeacherInfo: function(question){
+        if(question == null) return;
 
         var content = $('#content');
+        $('#current_question').text(question._text);
 
-        content.append('<h1>Question ' + (parseInt(current)+1) + '</h1>');
-        content.append('<h2>' + questions[current].text + '</h2>');
+        var answers = $('<ul>');
+        question._answers.forEach(function(answer){
+            var li = $('<li>').text(answer._text).appendTo(answers);
+        });
 
-        var list = $('<ul>');
-        for(var index in questions[current].answers) {
-            var answer = questions[current].answers[index];
-            var li = $('<li>').addClass('good-answer').text(answer.text);
-            list.append(li);
-        }
+        var current_answers = $('#current_answers');
+        current_answers.empty();
+        answers.appendTo(current_answers);
 
-        content.append(list);
-        content.append("<a href='#' id='next_question'>Question suivante</a>");
-        $('#next_question').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#' id='display_chart'>Afficher le graphique</a>");
-        $('#display_chart').on('click', function(){pageManager.displayChart(current);});
-        content.append("<a href='#' id='stop_session'>Arrêter</a>");
+        $('#question-start').removeClass('disabled');
+        $('#question-next').addClass('disabled');
+        $('#question-chart').removeClass('disabled');
+
+        setTimeout(function() {
+            $('#question-next').removeClass('disabled');
+        }, 5000);
     },
 
     displayChart: function(current){
@@ -332,43 +317,6 @@ var pageManager = {
             // score.getScoreOfAnswer(data[current].answers[i])
             cData.push(i);
         }
-        setBarChart(cLabels, cData);
-    },
-
-    nextQuestion: function(data, current){
-        console.log("next!");
-        this.clearBody();
-
-        data = this.getMockData();
-
-        this.displayQuestion(data, (parseInt(current)+1));
-
-        // For the teacher: displays information about question, answers and current scores
-        this.displayTeacherInfo(data, (parseInt(current)+1));
-        application.nextQuestionEtu(global.room._name,data[parseInt(current)+1]);
-    },
-
-    displayQuestion: function (data, current) {
-        this.clearBody();
-
-        if(current == null) current = 0;
-        data = this.getMockData();
-
-        $('#content').append('<h1>Question ' + parseInt(parseInt(current)+1) + '</h1>');
-        $('#content').append('<h2>' + data[current].text + '</h2>');
-        var html = "";
-        for(var i in data[current].answers){
-            var answer = data[current].answers[i];
-            html += "<input type='";
-            if(data[current].type == "single") html += "radio";
-            else if(data[current].type == "multiple") html += "checkbox";
-
-            html += "' name='question-" + (parseInt(current)+1) + "' value='" + answer.text + "' required /> " + answer.text + "<br />";
-        }
-
-        html += "<a onclick='pageManager.scoreSave()'>Valider</a>";
-
-        $("#content").append(html);
     },
 
     scoreSave: function(){
@@ -380,33 +328,5 @@ var pageManager = {
         this.clearBody();
 
         $("#content").append("Vous avez répondu : " + answers);
-    },
-
-    //TODO: this function has testing purposes ; delete
-    getMockData: function(){
-        /* MOCK DATA: Room MCQ */
-        var mockQCM = [];
-        var question1 = new Question();
-        var question2 = new Question();
-        question1.text = "La question 1 !";
-        question2.text = "Une question 2 ?";
-        question2.type = "single";
-        question1.type = "multiple";
-
-        var answer = new Answer();
-        var answer2 = new Answer();
-        var answer3 = new Answer();
-        var answer4 = new Answer();
-        answer.text = "La bonne réponse !"; answer.good = true;
-        answer2.text = "Une mauvaise réponse !"; answer.good = false;
-        answer4.text = "Une autre mauvaise réponse !"; answer.good = false;
-        answer3.text = "Une bonne réponse !"; answer.good = true;
-
-        question1.answers = [answer, answer2, answer4];
-        question2.answers = [answer, answer3, answer2, answer4];
-        mockQCM.push(question1);
-        mockQCM.push(question2);
-
-        return mockQCM;
     }
 };
