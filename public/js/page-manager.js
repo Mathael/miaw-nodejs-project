@@ -307,7 +307,8 @@ var pageManager = {
 
         content.append(list);
         $('<a>').attr('href', '#').text('Question suivante').on('click', function(){pageManager.nextQuestion(questions, current);}).appendTo(content);
-        content.append("<a href='#'>Afficher le graphique</a>").on('click', function(){pageManager.displayChart(current);});
+        content.append("<a href='#' id='display_chart'>Afficher le graphique</a>");
+        $('#display_chart').on('click', function(){pageManager.displayChart(current);});
         content.append("<a href='#'>Arrêter</a>");
     },
 
