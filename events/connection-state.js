@@ -58,6 +58,7 @@ module.exports = function (io) {
         //////////////////////////////////////////////////
         ///               TEACHER EVENTS               ///
         //////////////////////////////////////////////////
+
         socket.on(APP_EVENTS.TO_SERVER.TEACHER.START, function () {
             roomController.start(this);
         });

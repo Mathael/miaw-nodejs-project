@@ -289,41 +289,29 @@ var pageManager = {
         $('#question-next').addClass('disabled');
         $('#question-chart').removeClass('disabled');
 
+        //$('#graph').removeClass('hidden');
+
         setTimeout(function() {
             $('#question-next').removeClass('disabled');
         }, 5000);
     },
 
-    displayChart: function(current){
-        this.clearBody();
+    displayChart: function(answers){
+        if(!answers) return;
 
-        var data = this.getMockData();
-        var content = $("#content");
-
-        content.append("<h1>" + data[current].text + "</h1>");
+        var content = $('#graph');
         content.append("<select name='chart_type' id='chart_type'><option value='bar'>Graphique en barres</option><option value='pie'>Graphique en secteurs</option></select><br />");
-        content.append("<div id='chart-container'><canvas id='myChart' width='100' height='300'></canvas></div>");
+        content.append("<div id='chart-container'><canvas id='myChart' width='200' height='300'></canvas></div>");
 
-        var cData = [];
         var cLabels = [];
+        var cData = [];
 
-        for(var i in data[current].answers){
-            cLabels.push(data[current].answers[i].text);
-            //TODO : Real scole for this answer instead of i
-            // score.getScoreOfAnswer(data[current].answers[i])
-            cData.push(i);
+        for(var i = 0; i < answers.length; i++) {
+            cLabels.push(answers[i]._text);
+            cData[i] = answers[i]._value;
         }
-    },
 
-    scoreSave: function(){
-        var answers = [];
-        $("input:checked").each(function(){
-            answers.push($(this).val());
-        });
-
-        this.clearBody();
-
-        $("#content").append("Vous avez répondu : " + answers);
+        setBarChart(cLabels, cData);
     },
 
     displayAPropos : function () {
@@ -334,5 +322,5 @@ var pageManager = {
                 $('#content').append(data);
             }
         );
-    },
+    }
 };

@@ -53,7 +53,8 @@ module.exports = {
                             if(result.affectedRows) {
                                 answers.push({
                                     _id: result.insertId,
-                                    _text: answer._text
+                                    _text: answer._text,
+                                    _value: 0
                                 });
                             }
                         });
@@ -64,8 +65,7 @@ module.exports = {
                         _id: result.insertId,
                         _text: question._text,
                         _isMultiple: question._isMultiple,
-                        _answers: answers,
-                        _committed : []
+                        _answers: answers
                     });
                 }
             });
@@ -129,7 +129,7 @@ module.exports = {
         socket.broadcast.to(room._nsp).emit(APP_EVENTS.TO_CLIENT.QUESTION.SHOW, new Response('success', new QuestionDto(room._questions[position]), null));
     },
 
-    insertAnswer : function (socket, answers) {
+    insertAnswer : function (socket, answersIds) {
 
         var user = userService.findClientById(socket.id);
         if(!user) {
@@ -149,10 +149,11 @@ module.exports = {
             return;
         }
 
-        answers.forEach(function (answer) {
+        var roomQuestion = room._questions[room.current_question];
+        answersIds.forEach(function (answerId) {
             // In memory stored answers
-            var roomQuestion = room._questions[room.current_question];
-            if(roomQuestion) roomQuestion._committed.push(parseInt(answer));
+            var e = roomQuestion._answers.find(function(questionAnswer){return questionAnswer._id == answerId;});
+            if(e) e._value += 1;
         });
 
         // Notify user to wait for the next question
@@ -162,7 +163,7 @@ module.exports = {
         var commanderSocket = userService.getSocketClient(room._commander);
         if(!commanderSocket) return;
 
-        commanderSocket.emit(APP_EVENTS.TO_CLIENT.TEACHER.NEW_ANSWER_PUSHED, new Response('success', room._questions, null));
+        commanderSocket.emit(APP_EVENTS.TO_CLIENT.TEACHER.NEW_ANSWER_PUSHED, new Response('success', roomQuestion._answers, null));
     },
 
     join: function (socket, room_name, username) {

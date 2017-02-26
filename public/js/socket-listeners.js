@@ -76,6 +76,7 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.TO_CLIENT.TEACHER.NEW_ANSWER_PUSHED, function(response) {
         if (response.status != 'success' && response.message) sendAlert(response.status, response.message);
         console.log(response.payload);
+        pageManager.displayChart(response.payload);
     });
 
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {

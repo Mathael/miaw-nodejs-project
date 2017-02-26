@@ -7,6 +7,7 @@ function Answer(answer, good) {
 
     this._text = answer;
     this._good = good;
+    this._value = 0;
 }
 
 module.exports = Answer;

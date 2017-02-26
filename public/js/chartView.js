@@ -1,10 +1,9 @@
 var labels = null;
 var data = null;
 
-jQuery(document).ready(function () {
-    //TODO: Listener cassé
-    jQuery("select#chart_type").on('change', function(){
-        if(jQuery(this).val() == "bar"){
+$(function () {
+    $("select#chart_type").on('change', function(){
+        if($(this).val() == "bar"){
             setBarChart(labels, data);
         }else{
             setPieChart(labels, data);
@@ -13,14 +12,14 @@ jQuery(document).ready(function () {
 });
 
 function setBarChart(cLabels, cData){
-    jQuery("#myChart").remove();
-    jQuery("#chart-container").append('<canvas id="myChart" width="100" height="200"></canvas>');
+    var chart = $('#myChart');
+    if(chart) chart.remove();
+    $('#chart-container').append('<canvas id="myChart" width="100" height="200"></canvas>');
 
     labels = cLabels;
     data = cData;
 
-
-    var ctx = jQuery("#myChart");
+    var ctx = document.getElementById("myChart").getContext("2d");
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
