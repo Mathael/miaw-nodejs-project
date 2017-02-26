@@ -48,5 +48,10 @@ var application = {
     sendAnswers : function (answers) {
         console.log('emitting sendAnswers() with event name ' + APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
         socket.emit(APP_EVENTS.TO_SERVER.STUDENT.SEND_ANSWER, answers);
+    },
+    APropos : function () {
+        socket.emit(APP_EVENTS.COMMONS.APROPOS);
+
     }
+
 };

@@ -324,5 +324,15 @@ var pageManager = {
         this.clearBody();
 
         $("#content").append("Vous avez répondu : " + answers);
-    }
+    },
+
+    displayAPropos : function () {
+        var self = this;
+        requester('/APropos', null,
+            function (data) {
+                self.clearBody();
+                $('#content').append(data);
+            }
+        );
+    },
 };

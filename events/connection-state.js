@@ -78,6 +78,10 @@ module.exports = function (io) {
         ///                GLOBAL EVENTS               ///
         //////////////////////////////////////////////////
 
+        socket.on(APP_EVENTS.COMMONS.APROPOS, function (answers) {
+            socket.emit(APP_EVENTS.COMMONS.APROPOS);
+        });
+
         // Global broadcast on new client connect
         io.sockets.emit(APP_EVENTS.TO_CLIENT.GENERAL.NEW_USER_COUNT, userService.getCount());
     });

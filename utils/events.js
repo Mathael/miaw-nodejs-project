@@ -3,7 +3,8 @@ module.exports = {
         CON_STATE : {
             SUCCESS : 'CON_STATE_SUCCESS'
         },
-        FAIL : 'CON_STATE_FAIL'
+        FAIL : 'CON_STATE_FAIL',
+        APROPOS : 'EVENT_APROPOS'
     },
     TO_CLIENT : {
         GENERAL: {
