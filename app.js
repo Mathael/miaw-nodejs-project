@@ -33,8 +33,7 @@ var server = app.listen(constants.SERVER.PORT, function() {
 var io = sockets.listen(server);
 
 // Loading events catchers
-require('./events/connection-state')(io);
-//require('./events/room')(io);
+require('./events/sockets-events')(io);
 
 // Loading middlewares
 app.use(require('./middlewares/index'));
