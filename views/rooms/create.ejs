@@ -1,7 +1,6 @@
 
         <form>
             <h3>Informations sur le salon</h3>
-            <hr/>
             <div id="general-info">
                 <div class="input-block">
                     <label for="room-name">Nom du salon</label>
@@ -25,10 +24,6 @@
                 </div>
             </div>
             <h3>Création des questions</h3>
-            <hr/>
-            <div class="display-block">
-                <input type="button" value="Valider la création de cette question" onclick="pageManager.nextQuestionBuilder();" />
-            </div>
             <div id="questions-list">
                 <fieldset id="selector-question" class="display-inline-block">
                     <legend>Nouvelle question</legend>
@@ -62,17 +57,17 @@
                                 <input type="text" class="display-block selector-question-false" required />
                             </div>
                         </div>
+                        <input type="button" class="success float-right" value="Valider la création de cette question" onclick="pageManager.nextQuestionBuilder();" />
                     </div>
                 </fieldset>
-                <div class="display-inline-block">
+                <div class="display-inline-block valid-questions">
                     <h3>Liste des questions validées</h3>
                     <ul id="selector-questions-previsualisation"></ul>
                 </div>
             </div>
             <h3>Sélection parmis les questionnaires déjà réalisés</h3>
-            <hr/>
             <div>
                 <p>TODO</p>
             </div>
-            <a href="#" onclick="pageManager.validateRoomCreation()">Créer le salon</a>
+            <a href="#" onclick="pageManager.validateRoomCreation()" class="success">Créer le salon</a>
         </form>
