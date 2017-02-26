@@ -81,6 +81,10 @@ socket.on('CON_STATE_SUCCESS', function(data) {
     socket.on(APP_EVENTS.COMMONS.FAIL, function (response) {
         if(response && response.message) sendAlert('error', response.message);
     });
+
+    socket.on(APP_EVENTS.COMMONS.APROPOS, function (response) {
+        pageManager.displayAPropos();
+    });
 });
 
 socket.on('disconnect', function(){

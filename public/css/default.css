@@ -100,3 +100,23 @@ footer {
 }
 
 footer p { text-align: center; }
+
+#container{
+    text-align: center;
+    width:80%;
+    margin: auto;
+}
+
+#TitleApropos{
+    font-size: 1.6em;
+    font-style: italic;
+    color: #ce1223;
+}
+
+#container > section > h3 {
+    font-size: 1.4em;
+    color: #ce1223;
+}
+#container > section > div {
+    font-size: 1.2em;
+}

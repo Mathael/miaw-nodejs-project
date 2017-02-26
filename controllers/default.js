@@ -57,5 +57,9 @@ module.exports = function (app,io) {
         res.render('rooms/commander_my_room.ejs');
     });
 
+    app.get('/APropos', function (req, res) {
+        res.render('default/APropos.ejs');
+    });
+
     console.log('Default controller loaded successful');
 };
